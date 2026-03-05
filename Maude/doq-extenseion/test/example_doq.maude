@@ -1,0 +1,88 @@
+--- DNS over QUIC (DoQ) Simple Example
+--- 演示基本的DoQ查询流程和QUIC连接管理
+load ../../src/probabilistic-model/dns
+load ../../src/probabilistic-model/sampler
+load ../../test/test_helpers
+load ../src/common/doq-prelim
+load ../src/common/doq-actor
+load ../src/nondet-model/doq-dns
+
+mod DOQ-TEST is
+  inc SAMPLER + APMAUDE + DNS + DOQ-NODE + TEST-HELPERS .
+
+  --- 基本配置
+  op testTTL : -> Float .
+  eq testTTL = 3600.0 .
+
+  op q : -> Query .
+  eq q = query(1, 'www . 'example . 'com . root, a) .
+
+  --- 地址定义
+  ops cAddr rAddr doqNSAddr : -> Address .
+  eq cAddr = 1 . 1 . 1 . 1 .
+  eq rAddr = 8 . 8 . 8 . 8 .
+  eq doqNSAddr = 9 . 9 . 9 . 9 .
+
+  --- DoQ配置
+  op doqPort : -> Nat .
+  eq doqPort = 853 .  --- DoQ标准端口
+
+  --- QUIC配置参数
+  op quicMaxIdleTimeout : -> Float .
+  eq quicMaxIdleTimeout = 30.0 .  --- 30秒空闲超时
+
+  op quicInitialRTT : -> Float .
+  eq quicInitialRTT = 0.1 .    --- 初始RTT估计
+
+  --- 简单的数据库
+  op dbDoQNS : -> List{Record} .
+  eq dbDoQNS =
+    < 'example . 'com . root, soa, testTTL, soaData(testTTL) >
+    < 'example . 'com . root, ns, testTTL, 'ns . 'example . 'com . root >
+    < 'ns . 'example . 'com . root, a, testTTL, doqNSAddr >
+    < 'www . 'example . 'com . root, a, testTTL, 1 . 2 . 3 . 4 > .
+
+  --- DoQ初始配置
+  op doqInitConfig : -> Config .
+  eq doqInitConfig = run(doqInitState, limit) .
+
+  eq doqInitState = { 0.0 | nil } 
+    initMonitor(mAddr)
+    [id, to cAddr : start, 0]
+
+    --- DoQ客户端
+    < cAddr : Client | queries: q, resolver: rAddr, doqEnabled: true, doq0RTTEnabled: true, notifyDone: nullAddr >
+    
+    --- DoQ解析器
+    < rAddr : DoQResolver | cache: nilCache,
+                           quicConnections: empty,
+                           quicStreams: empty,
+                           quicConnMapping: empty,
+                           doqEnabled: true,
+                           doqPort: doqPort,
+                           doq0RTTEnabled: true,
+                           quicMaxIdleTimeout: quicMaxIdleTimeout,
+                           quicInitialRTT: quicInitialRTT,
+                           workBudget: emptyIN,
+                           blockedQueries: eptQSS,
+                           sentQueries: eptQSS >
+
+    --- DoQ名称服务器
+    < doqNSAddr : DoQNameserver | db: dbDoQNS, doqPort: doqPort, queue: nilQueue > .
+
+endm
+
+--- 调试设置
+set trace condition off .
+set trace whole off .
+set trace substitution off .
+set trace mb off .
+set trace eq off .
+set trace rl on .
+set trace select off .
+set trace rewrite off .
+set trace body off .
+set trace builtin off .
+
+--- 执行DoQ测试
+rew doqInitConfig .

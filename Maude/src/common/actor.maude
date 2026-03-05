@@ -1,0 +1,59 @@
+--- set show advisories off .
+
+fmod ADDRESS is --- Address module, function module definition
+--- fmod ... is ... endfm defines a module，定义一个功能模块
+  pr NAT + QID . --- protecting保护导入 natural numbers（自然数） and QIDs（引用标识）
+
+  sorts Address AddrSet AddrList .   --- sort 类型声明，定义三种类型 Address, AddrSet, AddrList
+  subsorts Address < AddrSet AddrList .  --- 子类型声明，Address 是 AddrSet 和 AddrList 的子类型（单个address也是地址集合和地址列表）
+
+  
+  op nullAddr : -> Address [ctor] .
+
+  --- composing address
+  op _._ : Address Address -> Address [assoc prec 10] . 
+  
+  op ept : -> AddrSet [ctor] .
+  op _;;_ : AddrSet AddrSet -> AddrSet [ctor comm assoc id: ept] . 
+  
+  op nil : -> AddrList [ctor] . --- 定义一个空地址列表常量 nil，输出类型是 AddrList，属性是 [ctor]
+  op _;_ : AddrList AddrList -> AddrList [ctor assoc id: nil] .  
+  --- _;_ 是一个中缀操作符，表示地址列表的连接，具有结合性，单位元是 nil（空列表）
+endfm
+view Address from TRIV to ADDRESS is sort Elt to Address . endv
+
+fmod ACTOR-MODEL is
+  pr ADDRESS + FLOAT .
+  --- ActorConfig represents a soup of actors containing no messages
+  sorts Actor Config ActorConfig . --- 定义三种类型 Actor, Config, ActorConfig
+  sort PairConfig . --- 定义一种类型 PairConfig
+  sorts Msg . --- 定义一种类型 Msg
+  sorts ActorType Attribute AttributeSet Content . 
+  --- 定义四种类型 ActorType, Attribute, AttributeSet, Content
+
+  subsort Msg < Config . --- Msg 是 Config 的子类型
+  subsort Actor < ActorConfig < Config . 
+  --- Actor 是 ActorConfig 的子类型，ActorConfig 是 Config 的子类型
+  subsort Attribute < AttributeSet . ---  Attribute 是 AttributeSet 的子类型
+
+  op null : -> ActorConfig . --- 定义一个常量 null，输出类型是 ActorConfig
+  op __ : ActorConfig ActorConfig -> ActorConfig [assoc comm id: null] .
+  
+  op __ : Config Config -> Config [assoc comm id: null] .
+
+  op pairConfig : Config Config -> PairConfig .
+
+  --- Messages:
+  op to_from_:_ : Address Address Content -> Msg .
+  op to_:_      : Address Content         -> Msg .
+  --- Actors:
+  op <_:_|_> : Address ActorType AttributeSet -> Actor [format (ni d d d d d d d)] .
+
+  --- Attributes can be used to add user defined data to an actor
+  op noneAS : -> AttributeSet .
+  op _,_ : AttributeSet AttributeSet -> AttributeSet [assoc comm id: noneAS] .
+endfm
+
+--- 不涉及业务逻辑定义，仅包含数据类型和基本操作符的定义
+--- fmod ADDRESS模块定义了地址及其集合和列表的基本操作
+--- ACTOR-MODEL模块定义了演员模型的基本结构，包括actor、配置、消息等基本概念

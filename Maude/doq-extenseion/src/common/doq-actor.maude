@@ -1,0 +1,32 @@
+load doq-prelim
+load ../../src/common/prelim
+load dot-actor
+
+fmod DOQ-NODE is
+  inc NODE + DOT-NODE + DOQ-SORTS .
+
+  --- DoQ相关Actor类型
+  op DoQNameserver : -> ActorType .
+  op DoQResolver : -> ActorType .
+
+  --- QUIC连接相关属性
+  op quicConnections:_ : Map{QUICConnectionId, QUICConnectionState} -> Attribute [format (nss d d)] .
+  op quicStreams:_ : Map{QUICStreamId, QUICStreamState} -> Attribute [format (nss d d)] .
+  op quicConnMapping:_ : Map{Address, QUICConnectionId} -> Attribute [format (nss d d)] .
+  
+  --- DoQ配置属性
+  op doqEnabled:_ : Bool -> Attribute [format (nss d d)] .
+  op doqPort:_ : Nat -> Attribute [format (nss d d)] .
+  op doq0RTTEnabled:_ : Bool -> Attribute [format (nss d d)] .
+  op doqMaxStreams:_ : Nat -> Attribute [format (nss d d)] .
+  
+  --- QUIC性能参数
+  op quicMaxIdleTimeout:_ : Float -> Attribute [format (nss d d)] .
+  op quicMaxPacketSize:_ : Nat -> Attribute [format (nss d d)] .
+  op quicInitialRTT:_ : Float -> Attribute [format (nss d d)] .
+  
+  --- 连接迁移支持
+  op quicConnectionMigration:_ : Bool -> Attribute [format (nss d d)] .
+  op quicPathValidation:_ : Bool -> Attribute [format (nss d d)] .
+
+endfm

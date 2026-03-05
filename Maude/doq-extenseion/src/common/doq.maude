@@ -1,0 +1,164 @@
+load ../../src/nondet-model/dns
+load ../common/doq-actor
+
+mod DOQ-DNS is
+  inc DNS + DOQ-NODE .
+
+  --- Variables
+  vars CL RSV NS ADDR MON : Address .
+  vars ID ID' : Id .
+  vars CONN_ID CONN_ID' : QUICConnectionId .
+  vars STREAM_ID STREAM_ID' : QUICStreamId .
+  var QNAME : Name .
+  var QTYPE : RType .
+  var PORT : Nat .
+  var TIMEOUT : Float .
+  var STATE STATE' : AttributeSet .
+  var QUIC_CONNS : Map{QUICConnectionId, QUICConnectionState} .
+  var QUIC_STREAMS : Map{QUICStreamId, QUICStreamState} .
+  var CONN_MAPPING : Map{Address, QUICConnectionId} .
+  var IAF IAF' : IdAddrFloatMap .
+  var AF AF' : AddrFloatMap .
+  var TAQL : TupleAddrQueryList .
+
+  ----------------
+  --- [DoQ CLIENT] ---
+  ----------------
+
+  --- > Send DoQ query instead of regular DNS query
+  rl [doq-client-send-query] :
+  < MON : Monitor | msgsSent: IAF', totalSent: AF', clientQSent: N, clQueryLog: TAQL, STATE' >
+  < CL : Client | queries: (query(ID, QNAME, QTYPE) QS), resolver: RSV, doqEnabled: true, STATE >
+  (to CL : start)
+  =>
+  < MON : Monitor | msgsSent: (if monitorDetailedMsgStats? then incr(ID, CL, IAF') else IAF' fi),
+                    totalSent: incrAF(CL, AF'),
+                    clientQSent: s N,
+                    clQueryLog: (if monitorQueryLog? then tupleAddrQuery(CL, query(ID, QNAME, QTYPE)) TAQL else TAQL fi),
+                    STATE' >
+  < CL : Client | queries: QS, resolver: RSV, doqEnabled: true, STATE >
+  [quic_connect, to RSV : quicConnect(RSV, quicConnId(1)), 0] .  --- 立即发起QUIC连接
+
+  ------------------
+  --- [DoQ RESOLVER] ---
+  ------------------
+
+  --- > Handle DoQ connection establishment
+  crl [doq-resolver-handle-connection] :
+  < MON : Monitor | msgsRcv: IAF, msgsSent: IAF', totalRcv: AF, totalSent: AF', STATE' >
+  < RSV : DoQResolver | quicConnections: QUIC_CONNS,
+                        quicConnMapping: CONN_MAPPING,
+                        doqPort: PORT,
+                        doqEnabled: true,
+                        STATE >
+  (to RSV : quicConnect(CL, CONN_ID))
+  =>
+  < MON : Monitor | msgsRcv: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF) else IAF fi),
+                    msgsSent: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF') else IAF' fi),
+                    totalRcv: incrAF(RSV, AF),
+                    totalSent: incrAF(RSV, AF'),
+                    STATE' >
+  < RSV : DoQResolver | quicConnections: (QUIC_CONNS, CONN_ID |-> quic_handshake),
+                        quicConnMapping: (CONN_MAPPING, CL |-> CONN_ID),
+                        doqPort: PORT,
+                        doqEnabled: true,
+                        STATE >
+  [quic_handshake, to RSV : quicConnectComplete(CL, CONN_ID), 0.05]  --- QUIC握手延迟
+  if
+    not (CONN_ID in keys(QUIC_CONNS)) /\    --- 连接不存在
+    not (CL in keys(CONN_MAPPING))         --- 客户端映射不存在
+  fi .
+
+  --- > Process DoQ query after QUIC connection established
+  crl [doq-resolver-process-after-connect] :
+  < MON : Monitor | msgsRcv: IAF, msgsSent: IAF', totalRcv: AF, totalSent: AF', STATE' >
+  < RSV : DoQResolver | quicConnections: QUIC_CONNS,
+                        quicConnMapping: CONN_MAPPING,
+                        cache: CACHE,
+                        doqEnabled: true,
+                        STATE >
+  (to RSV : quicConnectComplete(CL, CONN_ID))
+  =>
+  < MON : Monitor | msgsRcv: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF) else IAF fi),
+                    msgsSent: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF') else IAF' fi),
+                    totalRcv: incrAF(RSV, AF),
+                    totalSent: incrAF(RSV, AF'),
+                    STATE' >
+  < RSV : DoQResolver | quicConnections: (QUIC_CONNS, CONN_ID |-> quic_ready),
+                        quicConnMapping: CONN_MAPPING,
+                        cache: CACHE,
+                        doqEnabled: true,
+                        STATE >
+  [quic_stream, to RSV : quicStreamOpen(RSV, CONN_ID, quicStreamId(0)), 0.01]  --- 打开流
+  if
+    QUIC_CONNS[CONN_ID] == quic_handshake
+  fi .
+
+  --- > Send DNS query over QUIC stream
+  crl [doq-resolver-send-query-stream] :
+  < MON : Monitor | msgsRcv: IAF, msgsSent: IAF', totalRcv: AF, totalSent: AF', STATE' >
+  < RSV : DoQResolver | quicConnections: QUIC_CONNS,
+                        quicStreams: QUIC_STREAMS,
+                        quicConnMapping: CONN_MAPPING,
+                        doqEnabled: true,
+                        STATE >
+  (to RSV : quicStreamOpen(RSV, CONN_ID, STREAM_ID))
+  =>
+  < MON : Monitor | msgsRcv: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF) else IAF fi),
+                    msgsSent: (if monitorDetailedMsgStats? then incr(ID, RSV, IAF') else IAF' fi),
+                    totalRcv: incrAF(RSV, AF),
+                    totalSent: incrAF(RSV, AF'),
+                    STATE' >
+  < RSV : DoQResolver | quicConnections: QUIC_CONNS,
+                        quicStreams: (QUIC_STREAMS, STREAM_ID |-> quic_stream_open),
+                        quicConnMapping: CONN_MAPPING,
+                        doqEnabled: true,
+                        STATE >
+  (to RSV from CL : doqQuery(ID, QNAME, QTYPE, CONN_ID, STREAM_ID))
+  if
+    QUIC_CONNS[CONN_MAPPING[CL]] == quic_ready
+  fi .
+
+  --------------------
+  --- [DoQ NAMESERVER] ---
+  --------------------
+
+  --- > DoQ-enabled name server process query over QUIC
+  rl [doq-nameserver-process-query] :
+  < MON : Monitor | msgsRcv: IAF, msgsSent: IAF', totalRcv: AF, totalSent: AF', STATE' >
+  < NS : DoQNameserver | db: DB, doqPort: PORT, STATE >
+  (to NS from RSV : doqQuery(ID, QNAME, QTYPE, CONN_ID, STREAM_ID))
+  =>
+  < MON : Monitor | msgsRcv: (if monitorDetailedMsgStats? then incr(ID, NS, IAF) else IAF fi),
+                    msgsSent: (if monitorDetailedMsgStats? then incr(ID, NS, IAF') else IAF' fi),
+                    totalRcv: incrAF(NS, AF),
+                    totalSent: incrAF(NS, AF'),
+                    STATE' >
+  < NS : DoQNameserver | db: DB, doqPort: PORT, STATE >
+  (to RSV from NS : doqResponse(ID, QNAME, ANSWER, AUTH, ADD, RCODE, CONN_ID, STREAM_ID))
+  if
+    ANSWER := lookupAnswer(DB, QNAME, QTYPE) /\
+    AUTH := lookupAuthority(DB, QNAME) /\
+    ADD := lookupAdditional(DB, QNAME) /\
+    RCODE := determineRCODE(ANSWER, AUTH)
+  fi .
+
+  --- > 0-RTT查询支持 (连接恢复场景)
+  rl [doq-0rtt-query] :
+  < MON : Monitor | msgsRcv: IAF, msgsSent: IAF', totalRcv: AF, totalSent: AF', STATE' >
+  < CL : Client | queries: (query(ID, QNAME, QTYPE) QS), resolver: RSV, doq0RTTEnabled: true, STATE >
+  (to CL : start)
+  =>
+  < MON : Monitor | msgsSent: (if monitorDetailedMsgStats? then incr(ID, CL, IAF') else IAF' fi),
+                    totalSent: incrAF(CL, AF'),
+                    clientQSent: s N,
+                    clQueryLog: (if monitorQueryLog? then tupleAddrQuery(CL, query(ID, QNAME, QTYPE)) TAQL else TAQL fi),
+                    STATE' >
+  < CL : Client | queries: QS, resolver: RSV, doq0RTTEnabled: true, STATE >
+  (to RSV from CL : doq0RTTQuery(ID, QNAME, QTYPE, quicConnId(1)))  --- 0-RTT查询
+  if
+    --- 假设之前有已建立的连接可以恢复
+    true
+  fi .
+
+endm

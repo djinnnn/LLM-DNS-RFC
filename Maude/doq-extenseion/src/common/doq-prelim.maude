@@ -1,0 +1,51 @@
+--- DNS over QUIC (DoQ) Extension - Preliminary Definitions
+--- 基于RFC 9250标准
+
+load ../../src/common/prelim
+load dot-prelim  --- 复用DoT的一些基础类型
+
+--- DoQ相关类型定义
+fmod DOQ-SORTS is
+  inc SORTS + MSG + DOT-SORTS .
+
+  --- QUIC连接相关类型
+  sorts QUICConnectionId QUICStreamId QUICConnectionState QUICStreamState .
+  
+  --- QUIC连接状态
+  ops quic_idle quic_handshake quic_ready quic_closing quic_closed : -> QUICConnectionState [ctor] .
+  
+  --- QUIC流状态
+  ops quic_stream_ready quic_stream_open quic_stream_data quic_stream_closed : -> QUICStreamState [ctor] .
+  
+  --- QUIC连接标识符
+  op quicConnId : Nat -> QUICConnectionId [ctor] .
+  op quicStreamId : Nat -> QUICStreamId [ctor] .
+  
+  --- DoQ消息类型
+  sorts DoQQuery DoQResponse .
+  subsorts DoQQuery DoQResponse < Content .
+  
+  --- DoQ查询消息 (基于QUIC流)
+  op doqQuery : Id Name RType QUICConnectionId QUICStreamId -> DoQQuery .
+  
+  --- DoQ响应消息
+  op doqResponse : Id Name List{Record} List{Record} List{Record} Nat QUICConnectionId QUICStreamId -> DoQResponse .
+  
+  --- QUIC连接管理消息
+  op quicConnect : Address QUICConnectionId -> Content .
+  op quicConnectComplete : Address QUICConnectionId -> Content .
+  op quicStreamOpen : Address QUICConnectionId QUICStreamId -> Content .
+  op quicStreamData : Address QUICConnectionId QUICStreamId Content -> Content .
+  op quicConnectionClose : Address QUICConnectionId -> Content .
+  
+  --- DoQ特有的0-RTT支持
+  op doq0RTTQuery : Id Name RType QUICConnectionId -> Content .
+  op doq0RTTResponse : Id Name List{Record} List{Record} List{Record} Nat QUICConnectionId -> Content .
+
+endfm
+
+--- DoQ相关视图定义
+view QUICConnectionId from TRIV to DOQ-SORTS is sort Elt to QUICConnectionId . endv
+view QUICStreamId from TRIV to DOQ-SORTS is sort Elt to QUICStreamId . endv
+view DoQQuery from TRIV to DOQ-SORTS is sort Elt to DoQQuery . endv
+view DoQResponse from TRIV to DOQ-SORTS is sort Elt to DoQResponse . endv

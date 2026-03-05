@@ -1,0 +1,58 @@
+load ../common/_aux  --- bring in shared helpers for both models
+
+mod AUX is 
+  inc AUX-COMMON . --- common helpers (actors, cache utilities, etc.)
+  inc ADDRESS . --- needs ADDRESS but cannot protect due to Maude restriction
+
+  vars NAME QNAME SNAME SNAME_FULL : Name . --- names for owners/queries
+  var QTYPE : RType . --- record type (A, NS, CNAME, etc.)
+  vars RS ANS : List{Record} . --- general record lists
+  vars ADDR ADDR' : Address . --- generic actor addresses
+  var NA : Map{Name, Address} . --- name -> address map (slist)
+  var ZS : ZoneState . --- authoritative data for a name server
+  vars ID ID' : Id . --- query identifiers (with follow-up lineage)
+  var QSTATE : QueryState . --- single resolver query state
+  var QSS : QueryStateSet . --- set of query states
+  var QMIN_STATE : QMinState . --- QMIN bookkeeping state
+  vars N N' : Nat . --- counters (e.g., minimise depth)
+  vars B : Bool . --- flag for QMIN (use minimise?)
+
+  --- Sends the queries in the given QueryStateSet to a name server whose address is known.
+  ---   Note that all queries in the QueryStateSet should have at least one known name server address.
+  ---   Returns a Config consisting of Msgs.
+  --- Args: queries to be sent, resolver address
+  op sendQueries : QueryStateSet Address -> Config .
+  ceq sendQueries((QSTATE ;; QSS), ADDR)
+    = (to pickAddrNonDet(filterKnownAddr(NA)) from ADDR :
+        query(ID', SNAME, if B then QTYPE else qminQTYPE fi))
+      sendQueries(QSS, ADDR)
+    if queryState(query(ID, QNAME, QTYPE), ADDR', SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS, < NAME NA >) := QSTATE . --- pick any known NS addr per query
+  eq sendQueries(eptQSS, ADDR) = null . --- no queries => no messages
+
+  --- Sends SERVFAIL responses to clients for all queries in the given QueryStateSet.
+  ---   Returns a Config consisting of Msgs.
+  --- Args: queries, resolver address
+  op sendFailureResponses : QueryStateSet Address -> Config .
+  ceq sendFailureResponses((QSTATE ;; QSS), ADDR)
+    = if ADDR' == ADDR
+        then sendFailureResponses(QSS, ADDR) --- don't send failure responses to the resolver itself
+        else (to ADDR' from ADDR : response(ID, QNAME, nil, nil, nil, 2)) sendFailureResponses(QSS, ADDR)
+      fi
+    if queryState(query(ID, QNAME, QTYPE), ADDR', SNAME, ID', QMIN_STATE, ANS, ZS) := QSTATE . --- send SERVFAIL to each client (skip self)
+  eq sendFailureResponses(eptQSS, ADDR) = null . --- empty set => nothing
+
+  --- Filters the map such that only entries with a non-null address are retained.
+  op filterKnownAddr : Map{Name, Address} -> Map{Name, Address} .
+  eq filterKnownAddr((NAME |-> ADDR, NA))
+    = if ADDR =/= nullAddr
+        then (NAME |-> ADDR, filterKnownAddr(NA))
+        else filterKnownAddr(NA)
+      fi .
+  eq filterKnownAddr(empty) = empty . --- base case
+
+  --- Picks an address from the map non-deterministically.
+  op pickAddrNonDet : Map{Name, Address} -> [Address] .
+  rl [pick-addr] : pickAddrNonDet((NAME |-> ADDR, NA)) => ADDR . --- choose any entry
+  rl [pick-addr-null] : pickAddrNonDet(empty) => nullAddr . --- fallback when no address
+
+endm

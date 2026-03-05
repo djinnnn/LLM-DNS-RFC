@@ -1,0 +1,42 @@
+--- DNS over TLS (DoT) Extension - Preliminary Definitions
+--- 扩展原有的prelim.maude模块
+
+load ../../src/common/prelim
+
+--- DoT相关类型定义
+fmod DOT-SORTS is
+  inc SORTS + MSG .
+
+  --- DoT会话相关类型
+  sorts DoTSessionId DoTSessionState TLSState .
+  
+  --- DoT会话状态
+  ops active closed pending handshake : -> DoTSessionState [ctor] .
+  
+  --- TLS连接状态  
+  ops tls_handshake tls_established tls_closed tls_error : -> TLSState [ctor] .
+  
+  --- DoT会话标识符
+  op dotSessionId : Nat -> DoTSessionId [ctor] .
+  
+  --- DoT消息类型
+  sorts DoTQuery DoTResponse .
+  subsorts DoTQuery DoTResponse < Content .
+  
+  --- DoT查询消息
+  op dotQuery : Id Name RType DoTSessionId -> DoTQuery .
+  
+  --- DoT响应消息
+  op dotResponse : Id Name List{Record} List{Record} List{Record} Nat DoTSessionId -> DoTResponse .
+  
+  --- TLS握手消息
+  op tlsHandshake : Address DoTSessionId -> Content .
+  op tlsHandshakeComplete : Address DoTSessionId -> Content .
+  op tlsData : Address DoTSessionId Content -> Content .
+
+endfm
+
+--- DoT相关视图定义
+view DoTSessionId from TRIV to DOT-SORTS is sort Elt to DoTSessionId . endv
+view DoTQuery from TRIV to DOT-SORTS is sort Elt to DoTQuery . endv
+view DoTResponse from TRIV to DOT-SORTS is sort Elt to DoTResponse . endv
