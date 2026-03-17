@@ -1,8 +1,12 @@
-# -*- coding: utf-8 -*-
-from global_recursor import RFCGraphOrchestrator
-from visualize import visualize_graph
+import json
+import os
+import numpy as np
+from copy import deepcopy
+
+from orchestrator import RFCGraphOrchestrator
 from graph_knowledge_base import GraphKnowledgeBase
-from rag_router import SemanticRanker, GraphRAGRouter
+from rag_router import GraphRAGRouter, SemanticRanker, SentenceTransformerQueryBackend
+from embedding_store import NumpyEmbeddingStore 
 
 # def main():
 #     # ==========================================
@@ -82,60 +86,148 @@ from rag_router import SemanticRanker, GraphRAGRouter
 #     # print(response)
 
 def main():
-    target_rfc_doc = "7858" 
-    # 必须设为 1，确保 Document-Level 的目标文档被物理拉取并解析，才能进行 RAG 排序
-    test_depth = 1 
-    
+    target_rfc_doc = "7858"
+    test_depth = 1
+    seed_node = "RFC7858_Sec3.1"
+
+    save_dir = "../../RFCs_Test/"
+    vector_dir = os.path.join(save_dir, "vector_store")
+    npy_path = os.path.join(vector_dir, "section_embeddings.npy")
+    index_path = os.path.join(vector_dir, "section_embedding_index.json")
+
+    def truncate_text_fields(obj, max_len=200):
+        if isinstance(obj, dict):
+            out = {}
+            for k, v in obj.items():
+                if k == "text" and isinstance(v, str):
+                    out[k] = v[:max_len] + ("..." if len(v) > max_len else "")
+                else:
+                    out[k] = truncate_text_fields(v, max_len)
+            return out
+        elif isinstance(obj, list):
+            return [truncate_text_fields(x, max_len) for x in obj]
+        return obj
+
     print(f"=== [Phase 1] 启动底座构建 (RFC {target_rfc_doc}, Depth={test_depth}) ===")
-    orchestrator = RFCGraphOrchestrator(max_depth=test_depth, save_dir="../../RFCs_Test/")
+    orchestrator = RFCGraphOrchestrator(
+        max_depth=test_depth,
+        save_dir=save_dir,
+        enable_embeddings=True,
+        vector_dir=vector_dir
+    )
     global_graph = orchestrator.fetch_and_build(target_rfc_doc)
-    
-    # === [Phase 2] 局部路由与 ContextPack 组装 ===
+
+    print("\n=== [Phase 1.1] 全局图与向量存储检查 ===")
+    print(f"图节点总数: {global_graph.number_of_nodes()}")
+    print(f"图边总数: {global_graph.number_of_edges()}")
+    print(f"visited_rfcs: {sorted(list(orchestrator.visited_rfcs))}")
+
+    print("\n[Embedding 文件检查]")
+    print(f"npy exists: {os.path.exists(npy_path)}")
+    print(f"index exists: {os.path.exists(index_path)}")
+
+    if os.path.exists(npy_path) and os.path.exists(index_path):
+        matrix = np.load(npy_path)
+        with open(index_path, "r", encoding="utf-8") as f:
+            id_to_row = json.load(f)
+
+        print(f"matrix shape: {matrix.shape}")
+        print(f"num ids: {len(id_to_row)}")
+        print(f"dtype: {matrix.dtype}")
+
+        norms = np.linalg.norm(matrix, axis=1)
+        print(f"norm min: {float(norms.min())}")
+        print(f"norm max: {float(norms.max())}")
+        print(f"norm mean: {float(norms.mean())}")
+        print(f"bad rows: {int(np.sum(np.abs(norms - 1.0) > 1e-3))}")
+    else:
+        matrix = None
+        id_to_row = {}
+
+    print("\n[Graph Section 节点 embedding_id 检查]")
+    section_count = 0
+    missing_embedding_id = []
+    missing_in_index = []
+
+    for node_id, data in global_graph.nodes(data=True):
+        if data.get("node_type") != "Section":
+            continue
+        section_count += 1
+        emb_id = data.get("embedding_id")
+        if not emb_id:
+            missing_embedding_id.append(node_id)
+            continue
+        if emb_id not in id_to_row:
+            missing_in_index.append((node_id, emb_id))
+
+    print(f"section_count: {section_count}")
+    print(f"missing embedding_id: {len(missing_embedding_id)}")
+    if missing_embedding_id[:10]:
+        print(f"missing embedding_id examples: {missing_embedding_id[:10]}")
+    print(f"missing in index: {len(missing_in_index)}")
+    if missing_in_index[:10]:
+        print(f"missing in index examples: {missing_in_index[:10]}")
+
     print(f"\n=== [Phase 2] 执行 Graph RAG 路由 ===")
-    
     kb = GraphKnowledgeBase(global_graph)
-    ranker = SemanticRanker()
+
+    # 这里假设你已经把新 ranker 接好了
+    # 你可以按自己的实现替换这段初始化
+    query_backend = SentenceTransformerQueryBackend("BAAI/bge-large-en-v1.5")
+    embedding_store = NumpyEmbeddingStore(
+        npy_path=npy_path,
+        index_path=index_path
+    )
+    ranker = SemanticRanker(
+        query_backend=query_backend,
+        embedding_store=embedding_store,
+        min_score=-1.0
+    )
     router = GraphRAGRouter(kb, ranker)
-    
-    # 采用带有实际规则描述的 3.4 节作为 Testcase
-    seed_node = "RFC7858_Sec3.1" 
-    
-    print(f"\n=== [Phase 1.5] 检查节点 {seed_node} 的原始图谱拓扑 ===")
+
+    print(f"\n=== [Phase 2.1] 检查节点 {seed_node} 的原始图谱拓扑 ===")
     if global_graph.has_node(seed_node):
         node_data = global_graph.nodes[seed_node]
-        print(f"【节点属性】")
+        print("【节点属性】")
         print(f"  - ID: {seed_node}")
         print(f"  - Node Type: {node_data.get('node_type')}")
         print(f"  - Title: {node_data.get('title')}")
-        
+        print(f"  - RFC ID: {node_data.get('rfc_id')}")
+        print(f"  - Section ID: {node_data.get('section_id')}")
+        print(f"  - embedding_id: {node_data.get('embedding_id')}")
+
         print(f"\n【出度边 (Outgoing Edges) - 包含 AST 结构与交叉引用】")
         out_edges = list(global_graph.out_edges(seed_node, data=True))
         if not out_edges:
             print("  -> (空) 该节点没有任何向外的连边。")
-            
+
         for u, v, data in out_edges:
-            edge_type = data.get('edge_type', 'Unknown')
+            edge_type = data.get("edge_type", "Unknown")
             target_exists = global_graph.has_node(v)
-            
+
             print(f"  -> [Edge Type: {edge_type}] ---> Target ID: {v}")
             print(f"     - 目标节点是否已在图中实例化: {target_exists}")
-            
+
             if target_exists:
                 target_data = global_graph.nodes[v]
                 print(f"     - 目标节点类型: {target_data.get('node_type')}")
                 print(f"     - 目标节点标题: {target_data.get('title', 'Unknown')}")
+                print(f"     - 目标节点 embedding_id: {target_data.get('embedding_id')}")
             print("-" * 40)
-            
+
         print(f"\n【入度边 (Incoming Edges) - 检查父级作用域】")
         in_edges = list(global_graph.in_edges(seed_node, data=True))
+        if not in_edges:
+            print("  -> (空) 没有入度边。")
         for u, v, data in in_edges:
-             print(f"  -> Source ID: {u} ---> [Edge Type: {data.get('edge_type')}]")
-             
+            print(f"  -> Source ID: {u} ---> [Edge Type: {data.get('edge_type')}]")
     else:
-        print(f"❌ 严重错误: 当前生成的图谱中不存在节点 {seed_node}。请检查 _extract_sections_from_text 的正则匹配是否漏掉了该章节。")
+        print(f"❌ 严重错误: 当前生成的图谱中不存在节点 {seed_node}")
+        return
+
     print("========================================================\n")
 
-    # ==== Stage 3 context pack construction ====
+    print("=== [Phase 3] ContextPack Construction ===")
     context_pack = router.build_context_pack(seed_node)
 
     print("\n[执行 Trace 日志]")
@@ -169,13 +261,72 @@ def main():
         f"7. 语义扩展结果: "
         f"{len(context_pack['semantic_expansion'])} 个"
     )
-    from pprint import pprint
 
-    # print("\n[语义扩展结果原始结构]")
-    # pprint(context_pack["semantic_expansion"])
+    print("\n[规范性 Section-Level 引用详情]")
+    normative_section_refs = context_pack["references"]["normative"]["section_level"]
+    if not normative_section_refs:
+        print("  -> (空)")
+    for i, item in enumerate(normative_section_refs, 1):
+        sec = item["target_node"]
+        print(
+            f"{i}. {sec.get('section_id')} | "
+            f"{sec.get('title')} | "
+            f"ref_type={item['evidence'].get('ref_type')}"
+        )
 
-    print("\n[完整 ContextPack Schema 输出]")
-    pprint(context_pack, width=120, sort_dicts=False)
+    print("\n[规范性 Document-Level 引用详情]")
+    normative_doc_refs = context_pack["references"]["normative"]["document_level"]
+    if not normative_doc_refs:
+        print("  -> (空)")
+    for i, item in enumerate(normative_doc_refs, 1):
+        doc = item["target_doc"]
+        print(
+            f"{i}. rfc_id={doc.get('rfc_id')} | "
+            f"title={doc.get('title')} | "
+            f"ref_type={item['evidence'].get('ref_type')}"
+        )
+
+    print("\n[信息性 Section-Level 引用详情]")
+    informative_section_refs = context_pack["references"]["informative"]["section_level"]
+    if not informative_section_refs:
+        print("  -> (空)")
+    for i, item in enumerate(informative_section_refs, 1):
+        sec = item["target_node"]
+        print(
+            f"{i}. {sec.get('section_id')} | "
+            f"{sec.get('title')} | "
+            f"ref_type={item['evidence'].get('ref_type')}"
+        )
+
+    print("\n[信息性 Document-Level 引用详情]")
+    informative_doc_refs = context_pack["references"]["informative"]["document_level"]
+    if not informative_doc_refs:
+        print("  -> (空)")
+    for i, item in enumerate(informative_doc_refs, 1):
+        doc = item["target_doc"]
+        print(
+            f"{i}. rfc_id={doc.get('rfc_id')} | "
+            f"title={doc.get('title')} | "
+            f"ref_type={item['evidence'].get('ref_type')}"
+        )
+
+    print("\n[语义扩展结果详情]")
+    semantic_items = context_pack["semantic_expansion"]
+    if not semantic_items:
+        print("  -> (空)")
+    for i, item in enumerate(semantic_items, 1):
+        sec = item["retrieved_section"]
+        print(
+            f"{i}. source={item['source_doc_id']} | "
+            f"section={sec.get('section_id')} | "
+            f"title={sec.get('title')} | "
+            f"score={item.get('score'):.6f} | "
+            f"ref_type={item['evidence'].get('ref_type')}"
+        )
+
+    print("\n[完整 ContextPack Schema 输出 - 截断版]")
+    preview_pack = truncate_text_fields(deepcopy(context_pack), max_len=200)
+    print(json.dumps(preview_pack, indent=2, ensure_ascii=False))    
 
 if __name__ == "__main__":
     main()

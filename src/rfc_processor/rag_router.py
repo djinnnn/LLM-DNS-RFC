@@ -1,14 +1,30 @@
 from typing import Dict, Any, List, Set, Optional
 from graph_knowledge_base import GraphKnowledgeBase
+import numpy as np
+from sentence_transformers import SentenceTransformer
+
+
+class SentenceTransformerQueryBackend:
+    def __init__(self, model_name: str = "BAAI/bge-large-en-v1.5"):
+        self.model = SentenceTransformer(model_name)
+
+    def encode_query(self, text: str) -> np.ndarray:
+        text = (text or "").strip()
+        query = f"Represent this RFC section for retrieval: {text}"
+        vec = self.model.encode([query], normalize_embeddings=True)[0]
+        return np.asarray(vec, dtype=np.float32)
 
 
 class SemanticRanker:
-    """
-    语义排序器接口预留。
-    当前作为 Placeholder，后续接入 BGE / OpenAI embedding。
-    """
-    def __init__(self):
-        pass
+    def __init__(
+        self,
+        query_backend: SentenceTransformerQueryBackend,
+        embedding_store,
+        min_score: float = -1.0
+    ):
+        self.query_backend = query_backend
+        self.embedding_store = embedding_store
+        self.min_score = min_score
 
     def rank(
         self,
@@ -16,17 +32,53 @@ class SemanticRanker:
         candidate_sections: List[Dict[str, Any]],
         top_k: int = 3
     ) -> List[Dict[str, Any]]:
-        """
-        返回带 score 的排序结果。
-        目前仅截取前 top_k，并统一赋予占位分数。
-        """
-        if not candidate_sections:
+        if not candidate_sections or top_k <= 0:
             return []
 
-        return [
-            {"node": sec, "score": 1.0}
-            for sec in candidate_sections[:top_k]
-        ]
+        query_vec = self.query_backend.encode_query(query_text)
+
+        valid_sections = []
+        embedding_ids = []
+
+        for sec in candidate_sections:
+            emb_id = sec.get("embedding_id") or sec.get("id")
+            if not emb_id:
+                continue
+            valid_sections.append(sec)
+            embedding_ids.append(emb_id)
+
+        if not embedding_ids:
+            return []
+
+        valid_ids, matrix = self.embedding_store.get_many(embedding_ids)
+        if len(valid_ids) == 0:
+            return []
+
+        id_to_section = {
+            (sec.get("embedding_id") or sec.get("id")): sec
+            for sec in valid_sections
+        }
+
+        scores = matrix @ query_vec
+        ranked_indices = np.argsort(-scores)
+
+        results = []
+        for idx in ranked_indices:
+            emb_id = valid_ids[idx]
+            score = float(scores[idx])
+
+            if score < self.min_score:
+                continue
+
+            results.append({
+                "node": id_to_section[emb_id],
+                "score": score
+            })
+
+            if len(results) >= top_k:
+                break
+
+        return results
 
 
 class GraphRAGRouter:
