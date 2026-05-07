@@ -1,0 +1,59 @@
+{
+  "semantic_rules": [
+    {
+      "id": "doq-connection-establishment-quic",
+      "modality": "UNSPECIFIED",
+      "actor": {
+        "name": "endpoint",
+        "type": "endpoint"
+      },
+      "event": {
+        "kind": "state_trigger",
+        "expr": "Establishing a DoQ connection"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "kind": "state_update",
+          "expr": "Establish the connection as described in the QUIC transport specification [RFC9000]"
+        }
+      ],
+      "provenance": {
+        "document": "RFC9250",
+        "section": "RFC9250_Sec4.1",
+        "anchor": "established as described in the QUIC transport specification",
+        "source_text": "DoQ connections are established as described in the QUIC transport\nspecification [RFC9000]."
+      }
+    },
+    {
+      "id": "doq-alpn-token-selection",
+      "modality": "UNSPECIFIED",
+      "actor": {
+        "name": "endpoint",
+        "type": "endpoint"
+      },
+      "event": {
+        "kind": "state_trigger",
+        "expr": "During connection establishment"
+      },
+      "conditions": [
+        {
+          "kind": "predicate",
+          "expr": "DoQ support is to be indicated"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "send",
+          "expr": "Select the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake"
+        }
+      ],
+      "provenance": {
+        "document": "RFC9250",
+        "section": "RFC9250_Sec4.1",
+        "anchor": "ALPN token \"doq\"",
+        "source_text": "During connection establishment, DoQ support is\nindicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake."
+      }
+    }
+  ]
+}

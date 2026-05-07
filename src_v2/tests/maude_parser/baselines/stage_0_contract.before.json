@@ -1,0 +1,4578 @@
+{
+  "metadata": {
+    "model_type": "nondet-dns",
+    "version": "1.0",
+    "total_modules": 12,
+    "total_actors": 4,
+    "total_rules": 27
+  },
+  "sorts": {
+    "Address": {
+      "name": "Address",
+      "constructors": [
+        {
+          "name": "nullAddr",
+          "params": []
+        }
+      ],
+      "operators": [
+        {
+          "name": "addrOrNull",
+          "arity": [
+            "Name",
+            "List{Record}"
+          ],
+          "coarity": "Address"
+        }
+      ],
+      "subsorts": [
+        "Nat"
+      ],
+      "supersorts": [
+        "AddrSet",
+        "RData"
+      ],
+      "defined_in": "ADDRESS",
+      "used_by_actors": [
+        "Nameserver",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "AddrSet": {
+      "name": "AddrSet",
+      "constructors": [
+        {
+          "name": "ept",
+          "params": []
+        },
+        {
+          "name": "_;;_",
+          "params": [
+            "AddrSet",
+            "AddrSet"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "Address"
+      ],
+      "supersorts": [],
+      "defined_in": "ADDRESS",
+      "used_by_actors": []
+    },
+    "AddrList": {
+      "name": "AddrList",
+      "constructors": [
+        {
+          "name": "nil",
+          "params": []
+        },
+        {
+          "name": "_;_",
+          "params": [
+            "AddrList",
+            "AddrList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ADDRESS",
+      "used_by_actors": []
+    },
+    "Actor": {
+      "name": "Actor",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "<_:_|_>",
+          "arity": [
+            "Address",
+            "ActorType",
+            "AttributeSet"
+          ],
+          "coarity": "Actor"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "ActorConfig"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Config": {
+      "name": "Config",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "__",
+          "arity": [
+            "Config",
+            "Config"
+          ],
+          "coarity": "Config"
+        },
+        {
+          "name": "initSnapshot",
+          "arity": [
+            "Config"
+          ],
+          "coarity": "Config"
+        },
+        {
+          "name": "initConfigWithNonDetQuery",
+          "arity": [
+            "Config",
+            "Address",
+            "Address"
+          ],
+          "coarity": "Config"
+        },
+        {
+          "name": "sendQueries",
+          "arity": [
+            "QueryStateSet",
+            "Address"
+          ],
+          "coarity": "Config"
+        },
+        {
+          "name": "sendFailureResponses",
+          "arity": [
+            "QueryStateSet",
+            "Address"
+          ],
+          "coarity": "Config"
+        }
+      ],
+      "subsorts": [
+        "Msg"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "ActorConfig": {
+      "name": "ActorConfig",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "null",
+          "arity": [],
+          "coarity": "ActorConfig"
+        },
+        {
+          "name": "__",
+          "arity": [
+            "ActorConfig",
+            "ActorConfig"
+          ],
+          "coarity": "ActorConfig"
+        }
+      ],
+      "subsorts": [
+        "Actor"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "PairConfig": {
+      "name": "PairConfig",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "pairConfig",
+          "arity": [
+            "Config",
+            "Config"
+          ],
+          "coarity": "PairConfig"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Msg": {
+      "name": "Msg",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "to_from_:_",
+          "arity": [
+            "Address",
+            "Address",
+            "Content"
+          ],
+          "coarity": "Msg"
+        },
+        {
+          "name": "to_:_",
+          "arity": [
+            "Address",
+            "Content"
+          ],
+          "coarity": "Msg"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "Config"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "ActorType": {
+      "name": "ActorType",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "Resolver",
+          "arity": [],
+          "coarity": "ActorType"
+        },
+        {
+          "name": "Nameserver",
+          "arity": [],
+          "coarity": "ActorType"
+        },
+        {
+          "name": "Client",
+          "arity": [],
+          "coarity": "ActorType"
+        },
+        {
+          "name": "Monitor",
+          "arity": [],
+          "coarity": "ActorType"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Attribute": {
+      "name": "Attribute",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "cache:_",
+          "arity": [
+            "Cache"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "nxdomainCache:_",
+          "arity": [
+            "NxdomainCache"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "nodataCache:_",
+          "arity": [
+            "NodataCache"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "sbelt:_",
+          "arity": [
+            "ZoneState"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "workBudget:_",
+          "arity": [
+            "IdNatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "blockedQueries:_",
+          "arity": [
+            "QueryStateSet"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "sentQueries:_",
+          "arity": [
+            "QueryStateSet"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "db:_",
+          "arity": [
+            "List{Record}"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "queue:_",
+          "arity": [
+            "Queue"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "queries:_",
+          "arity": [
+            "List{Query}"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "resolver:_",
+          "arity": [
+            "Address"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "notifyDone:_",
+          "arity": [
+            "Address"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "init:_",
+          "arity": [
+            "Bool"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "msgsRcv:_",
+          "arity": [
+            "IdAddrFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "msgsSent:_",
+          "arity": [
+            "IdAddrFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "totalRcv:_",
+          "arity": [
+            "AddrFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "totalSent:_",
+          "arity": [
+            "AddrFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clientQSent:_",
+          "arity": [
+            "Nat"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clientQAnswered:_",
+          "arity": [
+            "Nat"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clientQServfail:_",
+          "arity": [
+            "Nat"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clientQStartTime:_",
+          "arity": [
+            "IdFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clientQEndTime:_",
+          "arity": [
+            "IdFloatMap"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "idsObserved:_",
+          "arity": [
+            "IdList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "nsQueryLog:_",
+          "arity": [
+            "TupleAddrQueryList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "nsRespLog:_",
+          "arity": [
+            "TupleAddrRespList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "nsRecs:_",
+          "arity": [
+            "TupleAddrRecsSet"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clQueryLog:_",
+          "arity": [
+            "TupleAddrQueryList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "clRespLog:_",
+          "arity": [
+            "TupleAddrRespList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "rsvRewriteLog:_",
+          "arity": [
+            "TupleNameRecsList"
+          ],
+          "coarity": "Attribute"
+        },
+        {
+          "name": "rsvSlistLog:_",
+          "arity": [
+            "TupleSlistArgsList"
+          ],
+          "coarity": "Attribute"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "AttributeSet"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "AttributeSet": {
+      "name": "AttributeSet",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "noneAS",
+          "arity": [],
+          "coarity": "AttributeSet"
+        },
+        {
+          "name": "_,_",
+          "arity": [
+            "AttributeSet",
+            "AttributeSet"
+          ],
+          "coarity": "AttributeSet"
+        }
+      ],
+      "subsorts": [
+        "Attribute"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Content": {
+      "name": "Content",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "start",
+          "arity": [],
+          "coarity": "Content"
+        },
+        {
+          "name": "processNextQuery",
+          "arity": [],
+          "coarity": "Content"
+        },
+        {
+          "name": "timeout",
+          "arity": [
+            "Id",
+            "Address"
+          ],
+          "coarity": "Content"
+        },
+        {
+          "name": "overallTimeout",
+          "arity": [
+            "Query",
+            "Address"
+          ],
+          "coarity": "Content"
+        },
+        {
+          "name": "stopSignal",
+          "arity": [],
+          "coarity": "Content"
+        }
+      ],
+      "subsorts": [
+        "Query",
+        "Response"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Name": {
+      "name": "Name",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "nullName",
+          "arity": [],
+          "coarity": "Name"
+        },
+        {
+          "name": "root",
+          "arity": [],
+          "coarity": "Name"
+        },
+        {
+          "name": "wildcard",
+          "arity": [],
+          "coarity": "Name"
+        },
+        {
+          "name": "label",
+          "arity": [
+            "Nat"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "label2",
+          "arity": [
+            "Nat",
+            "Nat"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "ownerName",
+          "arity": [
+            "Record"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "lastLabel",
+          "arity": [
+            "Name"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "findBestCanonicalName",
+          "arity": [
+            "Name",
+            "List{Record}"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "$findBestCanonicalName",
+          "arity": [
+            "Name",
+            "List{Record}",
+            "List{Record}"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "initSNAME",
+          "arity": [
+            "Name",
+            "RType",
+            "List{Record}",
+            "List{Record}"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "initQMinSNAME",
+          "arity": [
+            "Name",
+            "QMinState",
+            "NodataCache",
+            "Name"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "dnameSubstitution",
+          "arity": [
+            "Name",
+            "Record"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "root",
+          "arity": [
+            "LabelTree"
+          ],
+          "coarity": "Name"
+        },
+        {
+          "name": "dnameTgt",
+          "arity": [
+            "LabelTree"
+          ],
+          "coarity": "Name"
+        }
+      ],
+      "subsorts": [
+        "Qid"
+      ],
+      "supersorts": [
+        "NameList",
+        "RData"
+      ],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "NameList": {
+      "name": "NameList",
+      "constructors": [
+        {
+          "name": "nilNL",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "NameList",
+            "NameList"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "nsToResolve",
+          "arity": [
+            "ZoneState"
+          ],
+          "coarity": "NameList"
+        },
+        {
+          "name": "namesForAddressSLIST",
+          "arity": [
+            "Map",
+            "Name",
+            "Address",
+            "Address"
+          ],
+          "coarity": "NameList"
+        },
+        {
+          "name": "enumerateSymbolicSuffixes",
+          "arity": [
+            "Name",
+            "Nat"
+          ],
+          "coarity": "NameList"
+        },
+        {
+          "name": "enumeratePaths",
+          "arity": [
+            "LabelTree",
+            "Nat"
+          ],
+          "coarity": "NameList"
+        },
+        {
+          "name": "$enumeratePaths",
+          "arity": [
+            "LabelTree",
+            "LabelForest",
+            "Name",
+            "Name",
+            "Nat"
+          ],
+          "coarity": "NameList"
+        }
+      ],
+      "subsorts": [
+        "Name"
+      ],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "NameSet": {
+      "name": "NameSet",
+      "constructors": [
+        {
+          "name": "eptNS",
+          "params": []
+        },
+        {
+          "name": "_;;;_",
+          "params": [
+            "NameSet",
+            "NameSet"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "nameSetFromList",
+          "arity": [
+            "NameList"
+          ],
+          "coarity": "NameSet"
+        },
+        {
+          "name": "$nameSetFromList",
+          "arity": [
+            "NameList",
+            "NameSet"
+          ],
+          "coarity": "NameSet"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "RType": {
+      "name": "RType",
+      "constructors": [
+        {
+          "name": "a",
+          "params": []
+        },
+        {
+          "name": "ns",
+          "params": []
+        },
+        {
+          "name": "soa",
+          "params": []
+        },
+        {
+          "name": "cname",
+          "params": []
+        },
+        {
+          "name": "dname",
+          "params": []
+        },
+        {
+          "name": "mx",
+          "params": []
+        },
+        {
+          "name": "txt",
+          "params": []
+        },
+        {
+          "name": "srv",
+          "params": []
+        },
+        {
+          "name": "anyType",
+          "params": []
+        }
+      ],
+      "operators": [
+        {
+          "name": "rtype",
+          "arity": [
+            "Record"
+          ],
+          "coarity": "RType"
+        },
+        {
+          "name": "qminQTYPE",
+          "arity": [],
+          "coarity": "RType"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "RData": {
+      "name": "RData",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "soaData",
+          "arity": [
+            "Float"
+          ],
+          "coarity": "RData"
+        }
+      ],
+      "subsorts": [
+        "Name",
+        "Address"
+      ],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "Record": {
+      "name": "Record",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "<_,_,_,_>",
+          "arity": [
+            "Name",
+            "RType",
+            "Float",
+            "RData"
+          ],
+          "coarity": "Record"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "CacheEntry": {
+      "name": "CacheEntry",
+      "constructors": [
+        {
+          "name": "cacheEntry",
+          "params": [
+            "Record",
+            "Nat"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "Cache"
+      ],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "Cache": {
+      "name": "Cache",
+      "constructors": [
+        {
+          "name": "nilCache",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "Cache",
+            "Cache"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "listToCache",
+          "arity": [
+            "List{Record}",
+            "Nat"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "rrSetToCache",
+          "arity": [
+            "List{Record}",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "$rrSetToCache",
+          "arity": [
+            "List{Record}",
+            "Nat",
+            "Float",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "cacheRemoveRRset",
+          "arity": [
+            "Name",
+            "RType",
+            "Cache"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "updateCacheRRsetCred",
+          "arity": [
+            "Cache",
+            "List{Record}",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "updateCacheCred",
+          "arity": [
+            "Cache",
+            "List{Record}",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "updateCacheAuthAns",
+          "arity": [
+            "Cache",
+            "List{Record}",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "filterCacheTTLGreaterEqual",
+          "arity": [
+            "Cache",
+            "Float"
+          ],
+          "coarity": "Cache"
+        },
+        {
+          "name": "filterCacheTTLGreaterThan",
+          "arity": [
+            "Cache",
+            "Float"
+          ],
+          "coarity": "Cache"
+        }
+      ],
+      "subsorts": [
+        "CacheEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "NxdomainEntry": {
+      "name": "NxdomainEntry",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "nxdomainEntry",
+          "arity": [
+            "Name",
+            "Record",
+            "Nat"
+          ],
+          "coarity": "NxdomainEntry"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "NxdomainCache"
+      ],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "NxdomainCache": {
+      "name": "NxdomainCache",
+      "constructors": [
+        {
+          "name": "nilNxdomainCache",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "NxdomainCache",
+            "NxdomainCache"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "updateNxdomainCache",
+          "arity": [
+            "NxdomainCache",
+            "Name",
+            "List{Record}",
+            "List{Record}",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "NxdomainCache"
+        },
+        {
+          "name": "$updateNxdomainCache",
+          "arity": [
+            "NxdomainCache",
+            "Name",
+            "List{Record}",
+            "List{Record}",
+            "Nat",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "NxdomainCache"
+        },
+        {
+          "name": "filterNxdomainCacheTTLGreaterEqual",
+          "arity": [
+            "NxdomainCache",
+            "Float"
+          ],
+          "coarity": "NxdomainCache"
+        },
+        {
+          "name": "filterNxdomainCacheTTLGreaterThan",
+          "arity": [
+            "NxdomainCache",
+            "Float"
+          ],
+          "coarity": "NxdomainCache"
+        }
+      ],
+      "subsorts": [
+        "NxdomainEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "NodataEntry": {
+      "name": "NodataEntry",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "nodataEntry",
+          "arity": [
+            "Name",
+            "RType",
+            "Record",
+            "Nat"
+          ],
+          "coarity": "NodataEntry"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "NodataCache"
+      ],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "NodataCache": {
+      "name": "NodataCache",
+      "constructors": [
+        {
+          "name": "nilNodataCache",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "NodataCache",
+            "NodataCache"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "updateNodataCache",
+          "arity": [
+            "NodataCache",
+            "Name",
+            "RType",
+            "List{Record}",
+            "List{Record}",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "NodataCache"
+        },
+        {
+          "name": "$updateNodataCache",
+          "arity": [
+            "NodataCache",
+            "Name",
+            "RType",
+            "List{Record}",
+            "List{Record}",
+            "Nat",
+            "Nat",
+            "Float"
+          ],
+          "coarity": "NodataCache"
+        },
+        {
+          "name": "filterNodataCacheTTLGreaterEqual",
+          "arity": [
+            "NodataCache",
+            "Float"
+          ],
+          "coarity": "NodataCache"
+        },
+        {
+          "name": "filterNodataCacheTTLGreaterThan",
+          "arity": [
+            "NodataCache",
+            "Float"
+          ],
+          "coarity": "NodataCache"
+        }
+      ],
+      "subsorts": [
+        "NodataEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "SORTS",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "Query": {
+      "name": "Query",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "query",
+          "arity": [
+            "Id",
+            "Name",
+            "RType"
+          ],
+          "coarity": "Query"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "Content"
+      ],
+      "defined_in": "SORTS",
+      "used_by_actors": []
+    },
+    "ZoneState": {
+      "name": "ZoneState",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "<_",
+          "arity": [
+            "Name",
+            "Map",
+            "Name",
+            "Address"
+          ],
+          "coarity": "ZoneState"
+        },
+        {
+          "name": "_>",
+          "arity": [
+            "Name",
+            "Map",
+            "Name",
+            "Address"
+          ],
+          "coarity": "ZoneState"
+        },
+        {
+          "name": "initSLIST",
+          "arity": [
+            "Name",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "ZoneState",
+            "Name"
+          ],
+          "coarity": "ZoneState"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "SORTS-AUX",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "Id": {
+      "name": "Id",
+      "constructors": [
+        {
+          "name": "clientId",
+          "params": [
+            "Address",
+            "Nat"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "init",
+          "arity": [],
+          "coarity": "Id"
+        },
+        {
+          "name": "ref",
+          "arity": [],
+          "coarity": "Id"
+        },
+        {
+          "name": "cn",
+          "arity": [],
+          "coarity": "Id"
+        },
+        {
+          "name": "qm",
+          "arity": [],
+          "coarity": "Id"
+        },
+        {
+          "name": "nxt",
+          "arity": [],
+          "coarity": "Id"
+        },
+        {
+          "name": "getClientId",
+          "arity": [
+            "Id"
+          ],
+          "coarity": "Id"
+        }
+      ],
+      "subsorts": [
+        "Nat"
+      ],
+      "supersorts": [
+        "IdList"
+      ],
+      "defined_in": "MSG",
+      "used_by_actors": []
+    },
+    "IdList": {
+      "name": "IdList",
+      "constructors": [
+        {
+          "name": "nilIdL",
+          "params": []
+        },
+        {
+          "name": "_,_",
+          "params": [
+            "IdList",
+            "IdList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "Id"
+      ],
+      "supersorts": [],
+      "defined_in": "MSG",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "Response": {
+      "name": "Response",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "response",
+          "arity": [
+            "Id",
+            "Name",
+            "List{Record}",
+            "List{Record}",
+            "List{Record}",
+            "Nat"
+          ],
+          "coarity": "Response"
+        },
+        {
+          "name": "convertTTLAbsToRelResponse",
+          "arity": [
+            "Response",
+            "Float"
+          ],
+          "coarity": "Response"
+        },
+        {
+          "name": "responseFromCache",
+          "arity": [
+            "Id",
+            "Name",
+            "RType",
+            "List{Record}",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "Nat",
+            "Name"
+          ],
+          "coarity": "Response"
+        },
+        {
+          "name": "matchDown",
+          "arity": [
+            "Id",
+            "Name",
+            "RType",
+            "List{Record}"
+          ],
+          "coarity": "Response"
+        },
+        {
+          "name": "matchDownRec",
+          "arity": [
+            "Id",
+            "Name",
+            "RType",
+            "List{Record}",
+            "List{Record}",
+            "Name"
+          ],
+          "coarity": "Response"
+        },
+        {
+          "name": "$matchDownRec",
+          "arity": [
+            "Id",
+            "Name",
+            "RType",
+            "Name",
+            "List{Record}",
+            "List{Record}",
+            "Name",
+            "Record"
+          ],
+          "coarity": "Response"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "Content"
+      ],
+      "defined_in": "MSG",
+      "used_by_actors": []
+    },
+    "QueryState": {
+      "name": "QueryState",
+      "constructors": [
+        {
+          "name": "queryState",
+          "params": [
+            "Query",
+            "Address",
+            "Name",
+            "Id",
+            "QMinState",
+            "List{Record}",
+            "ZoneState"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "QueryStateSet"
+      ],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "QueryStateSet": {
+      "name": "QueryStateSet",
+      "constructors": [
+        {
+          "name": "eptQSS",
+          "params": []
+        },
+        {
+          "name": "_;;_",
+          "params": [
+            "QueryStateSet",
+            "QueryStateSet"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "getNsQueries",
+          "arity": [
+            "ZoneState",
+            "Id",
+            "Address",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "ZoneState"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "$getNsQueries",
+          "arity": [
+            "NameList",
+            "Id",
+            "Nat",
+            "Address",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "ZoneState"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "addResolverSubqueries",
+          "arity": [
+            "QueryStateSet",
+            "Address",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "ZoneState"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "filterQSSClientQueriesToAbort",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "filterQSSNotFollowUpOfOriginalAborted",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "filterQSSNotFollowUpOfId",
+          "arity": [
+            "QueryStateSet",
+            "Id"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "enhanceSLISTsOfQSS",
+          "arity": [
+            "QueryStateSet",
+            "List{Record}"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "removeNameFromSLISTsOfQSSIfNullAddr",
+          "arity": [
+            "QueryStateSet",
+            "Name"
+          ],
+          "coarity": "QueryStateSet"
+        },
+        {
+          "name": "$removeNameFromSLISTsOfQSSIfNullAddr",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "NameList"
+          ],
+          "coarity": "QueryStateSet"
+        }
+      ],
+      "subsorts": [
+        "QueryState"
+      ],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "QMinState": {
+      "name": "QMinState",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "qminState",
+          "arity": [
+            "Name",
+            "Nat",
+            "Nat",
+            "Bool"
+          ],
+          "coarity": "QMinState"
+        },
+        {
+          "name": "initQMinState",
+          "arity": [
+            "Name",
+            "QMinState",
+            "NodataCache",
+            "Name"
+          ],
+          "coarity": "QMinState"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "PairQueryStateSet": {
+      "name": "PairQueryStateSet",
+      "constructors": [
+        {
+          "name": "pairQSS",
+          "params": [
+            "QueryStateSet",
+            "QueryStateSet"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "splitQSSInQSS",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "$splitQSSInQSS",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "splitQSSKnownAddr",
+          "arity": [
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "$splitQSSKnownAddr",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "splitQSSEmpty",
+          "arity": [
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "$splitQSSEmpty",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "QueryStateSet"
+          ],
+          "coarity": "PairQueryStateSet"
+        },
+        {
+          "name": "updateSLISTsOfQSSs",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "Response"
+          ],
+          "coarity": "PairQueryStateSet"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "IdNatEntry": {
+      "name": "IdNatEntry",
+      "constructors": [
+        {
+          "name": "idNatEntry",
+          "params": [
+            "Id",
+            "Nat"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "IdNatMap"
+      ],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "IdNatMap": {
+      "name": "IdNatMap",
+      "constructors": [
+        {
+          "name": "emptyIN",
+          "params": []
+        },
+        {
+          "name": "_,_",
+          "params": [
+            "IdNatMap",
+            "IdNatMap"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "removeFromIdNatMap",
+          "arity": [
+            "Id",
+            "IdNatMap"
+          ],
+          "coarity": "IdNatMap"
+        },
+        {
+          "name": "cleanUpWorkBudget",
+          "arity": [
+            "IdNatMap",
+            "QueryStateSet"
+          ],
+          "coarity": "IdNatMap"
+        }
+      ],
+      "subsorts": [
+        "IdNatEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": [
+        "Resolver"
+      ]
+    },
+    "TupleQSSQSSIdNatMap": {
+      "name": "TupleQSSQSSIdNatMap",
+      "constructors": [
+        {
+          "name": "tupleQSSQSSIdNatMap",
+          "params": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "IdNatMap"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "splitQSSWorkBudget",
+          "arity": [
+            "QueryStateSet",
+            "IdNatMap"
+          ],
+          "coarity": "TupleQSSQSSIdNatMap"
+        },
+        {
+          "name": "$splitQSSWorkBudget",
+          "arity": [
+            "QueryStateSet",
+            "QueryStateSet",
+            "QueryStateSet",
+            "IdNatMap"
+          ],
+          "coarity": "TupleQSSQSSIdNatMap"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "QueueEntry": {
+      "name": "QueueEntry",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "queueEntry",
+          "arity": [
+            "Query",
+            "Address"
+          ],
+          "coarity": "QueueEntry"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "Queue"
+      ],
+      "defined_in": "NODE",
+      "used_by_actors": []
+    },
+    "Queue": {
+      "name": "Queue",
+      "constructors": [
+        {
+          "name": "__",
+          "params": [
+            "Queue",
+            "Queue"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "nilQueue",
+          "arity": [],
+          "coarity": "Queue"
+        }
+      ],
+      "subsorts": [
+        "QueueEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "NODE",
+      "used_by_actors": [
+        "Nameserver",
+        "Resolver"
+      ]
+    },
+    "AddrFloatEntry": {
+      "name": "AddrFloatEntry",
+      "constructors": [
+        {
+          "name": "addrFloatEntry",
+          "params": [
+            "Address",
+            "Float"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "AddrFloatMap"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "AddrFloatMap": {
+      "name": "AddrFloatMap",
+      "constructors": [
+        {
+          "name": "emptyAF",
+          "params": []
+        },
+        {
+          "name": "_,_",
+          "params": [
+            "AddrFloatMap",
+            "AddrFloatMap"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "addAF",
+          "arity": [
+            "Float",
+            "Address",
+            "AddrFloatMap"
+          ],
+          "coarity": "AddrFloatMap"
+        },
+        {
+          "name": "incrAF",
+          "arity": [
+            "Address",
+            "AddrFloatMap"
+          ],
+          "coarity": "AddrFloatMap"
+        }
+      ],
+      "subsorts": [
+        "AddrFloatEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "IdFloatEntry": {
+      "name": "IdFloatEntry",
+      "constructors": [
+        {
+          "name": "idFloatEntry",
+          "params": [
+            "Id",
+            "Float"
+          ]
+        },
+        {
+          "name": "emptyIF",
+          "params": []
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "IdFloatMap"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "IdFloatMap": {
+      "name": "IdFloatMap",
+      "constructors": [
+        {
+          "name": "_,_",
+          "params": [
+            "IdFloatMap",
+            "IdFloatMap"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "idFloatMapForQSS",
+          "arity": [
+            "QueryStateSet",
+            "Float"
+          ],
+          "coarity": "IdFloatMap"
+        }
+      ],
+      "subsorts": [
+        "IdFloatEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "IdAddrFloatEntry": {
+      "name": "IdAddrFloatEntry",
+      "constructors": [
+        {
+          "name": "idAddrFloatEntry",
+          "params": [
+            "Id",
+            "AddrFloatMap"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "IdAddrFloatMap"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "IdAddrFloatMap": {
+      "name": "IdAddrFloatMap",
+      "constructors": [
+        {
+          "name": "emptyIAF",
+          "params": []
+        },
+        {
+          "name": "_,_",
+          "params": [
+            "IdAddrFloatMap",
+            "IdAddrFloatMap"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "addIAF",
+          "arity": [
+            "Float",
+            "Id",
+            "Address",
+            "IdAddrFloatMap"
+          ],
+          "coarity": "IdAddrFloatMap"
+        },
+        {
+          "name": "incr",
+          "arity": [
+            "Id",
+            "Address",
+            "IdAddrFloatMap"
+          ],
+          "coarity": "IdAddrFloatMap"
+        },
+        {
+          "name": "incrForQSS",
+          "arity": [
+            "QueryStateSet",
+            "Address",
+            "IdAddrFloatMap"
+          ],
+          "coarity": "IdAddrFloatMap"
+        }
+      ],
+      "subsorts": [
+        "IdAddrFloatEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "IdAddrListEntry": {
+      "name": "IdAddrListEntry",
+      "constructors": [
+        {
+          "name": "idAddrListEntry",
+          "params": [
+            "Id",
+            "AddrList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "IdAddrListMap"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "IdAddrListMap": {
+      "name": "IdAddrListMap",
+      "constructors": [
+        {
+          "name": "emptyIAL",
+          "params": []
+        },
+        {
+          "name": "_,_",
+          "params": [
+            "IdAddrListMap",
+            "IdAddrListMap"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "IdAddrListEntry"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleAddrQuery": {
+      "name": "TupleAddrQuery",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "tupleAddrQuery",
+          "arity": [
+            "Address",
+            "Query"
+          ],
+          "coarity": "TupleAddrQuery"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "TupleAddrQueryList"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleAddrQueryList": {
+      "name": "TupleAddrQueryList",
+      "constructors": [
+        {
+          "name": "nilTAQL",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "TupleAddrQueryList",
+            "TupleAddrQueryList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "TupleAddrQuery"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "TupleAddrResp": {
+      "name": "TupleAddrResp",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "tupleAddrResp",
+          "arity": [
+            "Address",
+            "Response"
+          ],
+          "coarity": "TupleAddrResp"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "TupleAddrRespList"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleAddrRespList": {
+      "name": "TupleAddrRespList",
+      "constructors": [
+        {
+          "name": "nilTARL",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "TupleAddrRespList",
+            "TupleAddrRespList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "TupleAddrResp"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "TupleAddrRecs": {
+      "name": "TupleAddrRecs",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "tupleAddrRecs",
+          "arity": [
+            "Address",
+            "List{Record}"
+          ],
+          "coarity": "TupleAddrRecs"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "TupleAddrRecsSet"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleAddrRecsSet": {
+      "name": "TupleAddrRecsSet",
+      "constructors": [
+        {
+          "name": "eptTARecsS",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "TupleAddrRecsSet",
+            "TupleAddrRecsSet"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "dbsFromConfig",
+          "arity": [
+            "Config"
+          ],
+          "coarity": "TupleAddrRecsSet"
+        }
+      ],
+      "subsorts": [
+        "TupleAddrRecs"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "TupleNameRecs": {
+      "name": "TupleNameRecs",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "tupleNameRecs",
+          "arity": [
+            "Name",
+            "List{Record}"
+          ],
+          "coarity": "TupleNameRecs"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "TupleNameRecsList"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleNameRecsList": {
+      "name": "TupleNameRecsList",
+      "constructors": [
+        {
+          "name": "nilTNRL",
+          "params": []
+        },
+        {
+          "name": "__",
+          "params": [
+            "TupleNameRecsList",
+            "TupleNameRecsList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "TupleNameRecs"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "TupleSlistArgs": {
+      "name": "TupleSlistArgs",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "tupleSlistArgs",
+          "arity": [
+            "Name",
+            "Cache",
+            "NxdomainCache",
+            "NodataCache",
+            "ZoneState",
+            "Name"
+          ],
+          "coarity": "TupleSlistArgs"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "TupleSlistArgsList"
+      ],
+      "defined_in": "MONITOR",
+      "used_by_actors": []
+    },
+    "TupleSlistArgsList": {
+      "name": "TupleSlistArgsList",
+      "constructors": [
+        {
+          "name": "__",
+          "params": [
+            "TupleSlistArgsList",
+            "TupleSlistArgsList"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "nilTSAL",
+          "arity": [],
+          "coarity": "TupleSlistArgsList"
+        }
+      ],
+      "subsorts": [
+        "TupleSlistArgs"
+      ],
+      "supersorts": [],
+      "defined_in": "MONITOR",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    },
+    "LabelTree": {
+      "name": "LabelTree",
+      "constructors": [
+        {
+          "name": "_[_]{_}",
+          "params": [
+            "Name",
+            "LabelForest",
+            "Name"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "LabelForest"
+      ],
+      "defined_in": "LABEL-GRAPH",
+      "used_by_actors": []
+    },
+    "LabelForest": {
+      "name": "LabelForest",
+      "constructors": [
+        {
+          "name": "emptyLF",
+          "params": []
+        },
+        {
+          "name": "_:_",
+          "params": [
+            "LabelForest",
+            "LabelForest"
+          ]
+        }
+      ],
+      "operators": [
+        {
+          "name": "children",
+          "arity": [
+            "LabelTree"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "findSubtree",
+          "arity": [
+            "Name",
+            "LabelForest"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "insertName",
+          "arity": [
+            "Name",
+            "LabelForest"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "insertDNAME",
+          "arity": [
+            "Name",
+            "Name",
+            "LabelForest"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "insertRecord",
+          "arity": [
+            "Record",
+            "LabelForest"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "labelGraphFromRecords",
+          "arity": [
+            "List{Record}"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "$labelGraphFromRecords",
+          "arity": [
+            "List{Record}",
+            "LabelForest"
+          ],
+          "coarity": "LabelForest"
+        },
+        {
+          "name": "labelGraphFromConfig",
+          "arity": [
+            "Config"
+          ],
+          "coarity": "LabelForest"
+        }
+      ],
+      "subsorts": [
+        "LabelTree"
+      ],
+      "supersorts": [],
+      "defined_in": "LABEL-GRAPH",
+      "used_by_actors": [
+        "Nameserver",
+        "Monitor",
+        "Resolver",
+        "Client"
+      ]
+    }
+  },
+  "actors": {
+    "Resolver": {
+      "name": "Resolver",
+      "inherits_from": null,
+      "state_interface": {
+        "cache": {
+          "attribute": "cache",
+          "sort": "Cache",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nxdomainCache": {
+          "attribute": "nxdomainCache",
+          "sort": "NxdomainCache",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nodataCache": {
+          "attribute": "nodataCache",
+          "sort": "NodataCache",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "sbelt": {
+          "attribute": "sbelt",
+          "sort": "ZoneState",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "workBudget": {
+          "attribute": "workBudget",
+          "sort": "IdNatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "blockedQueries": {
+          "attribute": "blockedQueries",
+          "sort": "QueryStateSet",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "sentQueries": {
+          "attribute": "sentQueries",
+          "sort": "QueryStateSet",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "db": {
+          "attribute": "db",
+          "sort": "List{Record}",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "queue": {
+          "attribute": "queue",
+          "sort": "Queue",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "queries": {
+          "attribute": "queries",
+          "sort": "List{Query}",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "resolver": {
+          "attribute": "resolver",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "notifyDone": {
+          "attribute": "notifyDone",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "init": {
+          "attribute": "init",
+          "sort": "Bool",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsRcv": {
+          "attribute": "msgsRcv",
+          "sort": "IdAddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsSent": {
+          "attribute": "msgsSent",
+          "sort": "IdAddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalRcv": {
+          "attribute": "totalRcv",
+          "sort": "AddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalSent": {
+          "attribute": "totalSent",
+          "sort": "AddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQSent": {
+          "attribute": "clientQSent",
+          "sort": "Nat",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQAnswered": {
+          "attribute": "clientQAnswered",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQServfail": {
+          "attribute": "clientQServfail",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQStartTime": {
+          "attribute": "clientQStartTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQEndTime": {
+          "attribute": "clientQEndTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "idsObserved": {
+          "attribute": "idsObserved",
+          "sort": "IdList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsQueryLog": {
+          "attribute": "nsQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRespLog": {
+          "attribute": "nsRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRecs": {
+          "attribute": "nsRecs",
+          "sort": "TupleAddrRecsSet",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clQueryLog": {
+          "attribute": "clQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clRespLog": {
+          "attribute": "clRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvRewriteLog": {
+          "attribute": "rsvRewriteLog",
+          "sort": "TupleNameRecsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvSlistLog": {
+          "attribute": "rsvSlistLog",
+          "sort": "TupleSlistArgsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "_": {
+          "attribute": "_",
+          "sort": "LabelForest",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        }
+      },
+      "message_interface": {
+        "receives": [
+          "response",
+          "query"
+        ],
+        "sends": [
+          "response"
+        ]
+      },
+      "rules_handled": [
+        "resolver-reply-local",
+        "resolver-recv-query",
+        "resolver-recv-ans-for-client",
+        "resolver-recv-ans-for-resolver",
+        "resolver-recv-cname-reply-for-client-answered",
+        "resolver-recv-cname-reply-for-resolver-answered",
+        "resolver-recv-cname-reply-not-answered",
+        "resolver-recv-dname-reply-for-client-answered",
+        "resolver-recv-dname-reply-for-resolver-answered",
+        "resolver-recv-dname-reply-not-answered",
+        "resolver-recv-referral-reply",
+        "resolver-recv-qmin-noerror-reply",
+        "resolver-recv-bad-referral-reply-for-client",
+        "resolver-recv-bad-referral-reply-for-resolver",
+        "resolver-recv-refused-reply-for-client",
+        "resolver-recv-refused-reply-for-resolver"
+      ],
+      "defined_in": "NODE"
+    },
+    "Nameserver": {
+      "name": "Nameserver",
+      "inherits_from": null,
+      "state_interface": {
+        "db": {
+          "attribute": "db",
+          "sort": "List{Record}",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "queue": {
+          "attribute": "queue",
+          "sort": "Queue",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "queries": {
+          "attribute": "queries",
+          "sort": "List{Query}",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "resolver": {
+          "attribute": "resolver",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "notifyDone": {
+          "attribute": "notifyDone",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "init": {
+          "attribute": "init",
+          "sort": "Bool",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsRcv": {
+          "attribute": "msgsRcv",
+          "sort": "IdAddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsSent": {
+          "attribute": "msgsSent",
+          "sort": "IdAddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalRcv": {
+          "attribute": "totalRcv",
+          "sort": "AddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalSent": {
+          "attribute": "totalSent",
+          "sort": "AddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQSent": {
+          "attribute": "clientQSent",
+          "sort": "Nat",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQAnswered": {
+          "attribute": "clientQAnswered",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQServfail": {
+          "attribute": "clientQServfail",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQStartTime": {
+          "attribute": "clientQStartTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQEndTime": {
+          "attribute": "clientQEndTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "idsObserved": {
+          "attribute": "idsObserved",
+          "sort": "IdList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsQueryLog": {
+          "attribute": "nsQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRespLog": {
+          "attribute": "nsRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRecs": {
+          "attribute": "nsRecs",
+          "sort": "TupleAddrRecsSet",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clQueryLog": {
+          "attribute": "clQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clRespLog": {
+          "attribute": "clRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvRewriteLog": {
+          "attribute": "rsvRewriteLog",
+          "sort": "TupleNameRecsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvSlistLog": {
+          "attribute": "rsvSlistLog",
+          "sort": "TupleSlistArgsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "_": {
+          "attribute": "_",
+          "sort": "LabelForest",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        }
+      },
+      "message_interface": {
+        "receives": [
+          "query"
+        ],
+        "sends": []
+      },
+      "rules_handled": [
+        "nameserver-recv-query-unbounded"
+      ],
+      "defined_in": "NODE"
+    },
+    "Client": {
+      "name": "Client",
+      "inherits_from": null,
+      "state_interface": {
+        "queries": {
+          "attribute": "queries",
+          "sort": "List{Query}",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "resolver": {
+          "attribute": "resolver",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "notifyDone": {
+          "attribute": "notifyDone",
+          "sort": "Address",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "init": {
+          "attribute": "init",
+          "sort": "Bool",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsRcv": {
+          "attribute": "msgsRcv",
+          "sort": "IdAddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsSent": {
+          "attribute": "msgsSent",
+          "sort": "IdAddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalRcv": {
+          "attribute": "totalRcv",
+          "sort": "AddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalSent": {
+          "attribute": "totalSent",
+          "sort": "AddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQSent": {
+          "attribute": "clientQSent",
+          "sort": "Nat",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQAnswered": {
+          "attribute": "clientQAnswered",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQServfail": {
+          "attribute": "clientQServfail",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQStartTime": {
+          "attribute": "clientQStartTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQEndTime": {
+          "attribute": "clientQEndTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "idsObserved": {
+          "attribute": "idsObserved",
+          "sort": "IdList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsQueryLog": {
+          "attribute": "nsQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRespLog": {
+          "attribute": "nsRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRecs": {
+          "attribute": "nsRecs",
+          "sort": "TupleAddrRecsSet",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clQueryLog": {
+          "attribute": "clQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clRespLog": {
+          "attribute": "clRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvRewriteLog": {
+          "attribute": "rsvRewriteLog",
+          "sort": "TupleNameRecsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvSlistLog": {
+          "attribute": "rsvSlistLog",
+          "sort": "TupleSlistArgsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "_": {
+          "attribute": "_",
+          "sort": "LabelForest",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        }
+      },
+      "message_interface": {
+        "receives": [
+          "response"
+        ],
+        "sends": [
+          "response"
+        ]
+      },
+      "rules_handled": [
+        "client-start",
+        "client-recv-resp-send-next",
+        "resolver-recv-ans-for-client",
+        "resolver-recv-cname-reply-for-client-answered",
+        "resolver-recv-dname-reply-for-client-answered",
+        "resolver-recv-bad-referral-reply-for-client",
+        "resolver-recv-refused-reply-for-client"
+      ],
+      "defined_in": "NODE"
+    },
+    "Monitor": {
+      "name": "Monitor",
+      "inherits_from": null,
+      "state_interface": {
+        "init": {
+          "attribute": "init",
+          "sort": "Bool",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsRcv": {
+          "attribute": "msgsRcv",
+          "sort": "IdAddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "msgsSent": {
+          "attribute": "msgsSent",
+          "sort": "IdAddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalRcv": {
+          "attribute": "totalRcv",
+          "sort": "AddrFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "totalSent": {
+          "attribute": "totalSent",
+          "sort": "AddrFloatMap",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQSent": {
+          "attribute": "clientQSent",
+          "sort": "Nat",
+          "mode": "read-write",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQAnswered": {
+          "attribute": "clientQAnswered",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQServfail": {
+          "attribute": "clientQServfail",
+          "sort": "Nat",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQStartTime": {
+          "attribute": "clientQStartTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clientQEndTime": {
+          "attribute": "clientQEndTime",
+          "sort": "IdFloatMap",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "idsObserved": {
+          "attribute": "idsObserved",
+          "sort": "IdList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsQueryLog": {
+          "attribute": "nsQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRespLog": {
+          "attribute": "nsRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "nsRecs": {
+          "attribute": "nsRecs",
+          "sort": "TupleAddrRecsSet",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clQueryLog": {
+          "attribute": "clQueryLog",
+          "sort": "TupleAddrQueryList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "clRespLog": {
+          "attribute": "clRespLog",
+          "sort": "TupleAddrRespList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvRewriteLog": {
+          "attribute": "rsvRewriteLog",
+          "sort": "TupleNameRecsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "rsvSlistLog": {
+          "attribute": "rsvSlistLog",
+          "sort": "TupleSlistArgsList",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        },
+        "_": {
+          "attribute": "_",
+          "sort": "LabelForest",
+          "mode": "read",
+          "is_inherited": false,
+          "inherited_from": null
+        }
+      },
+      "message_interface": {
+        "receives": [],
+        "sends": []
+      },
+      "rules_handled": [],
+      "defined_in": "MONITOR"
+    }
+  },
+  "rules": {
+    "LABEL-GRAPH:pick-name": {
+      "rule_id": "LABEL-GRAPH:pick-name",
+      "rule_name": "pick-name",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "LABEL-GRAPH:pick-type-a": {
+      "rule_id": "LABEL-GRAPH:pick-type-a",
+      "rule_name": "pick-type-a",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "LABEL-GRAPH:pick-type-ns": {
+      "rule_id": "LABEL-GRAPH:pick-type-ns",
+      "rule_name": "pick-type-ns",
+      "actor_role": "Nameserver",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "LABEL-GRAPH:pick-type-soa": {
+      "rule_id": "LABEL-GRAPH:pick-type-soa",
+      "rule_name": "pick-type-soa",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "LABEL-GRAPH:pick-type-cname": {
+      "rule_id": "LABEL-GRAPH:pick-type-cname",
+      "rule_name": "pick-type-cname",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "LABEL-GRAPH:pick-type-txt": {
+      "rule_id": "LABEL-GRAPH:pick-type-txt",
+      "rule_name": "pick-type-txt",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "LABEL-GRAPH",
+      "rfc_references": []
+    },
+    "AUX:pick-addr": {
+      "rule_id": "AUX:pick-addr",
+      "rule_name": "pick-addr",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "AUX",
+      "rfc_references": []
+    },
+    "AUX:pick-addr-null": {
+      "rule_id": "AUX:pick-addr-null",
+      "rule_name": "pick-addr-null",
+      "actor_role": "Unknown",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [],
+      "state_reads": [],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "AUX",
+      "rfc_references": []
+    },
+    "DNS:client-start": {
+      "rule_id": "DNS:client-start",
+      "rule_name": "client-start",
+      "actor_role": "Client",
+      "event_pattern": "init",
+      "guard_slots": [],
+      "action_slots": [
+        {
+          "slot_id": "client-start-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "queries",
+        "resolver",
+        "msgsSent",
+        "totalSent",
+        "clientQSent",
+        "clQueryLog"
+      ],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:client-recv-resp-send-next": {
+      "rule_id": "DNS:client-recv-resp-send-next",
+      "rule_name": "client-recv-resp-send-next",
+      "actor_role": "Client",
+      "event_pattern": "unknown_event",
+      "guard_slots": [],
+      "action_slots": [
+        {
+          "slot_id": "client-recv-resp-send-next-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "queries",
+        "resolver",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "clientQSent",
+        "clientQAnswered",
+        "clientQServfail",
+        "clQueryLog",
+        "clRespLog"
+      ],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": false,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-reply-local": {
+      "rule_id": "DNS:resolver-reply-local",
+      "rule_name": "resolver-reply-local",
+      "actor_role": "Resolver",
+      "event_pattern": "unknown_event",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-reply-local-guard",
+          "description": "Condition for resolver-reply-local",
+          "rfc_reference": null,
+          "template": "CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-reply-local-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-reply-local-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-query": {
+      "rule_id": "DNS:resolver-recv-query",
+      "rule_name": "resolver-recv-query",
+      "actor_role": "Resolver",
+      "event_pattern": "recv query(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-query-guard",
+          "description": "Condition for resolver-recv-query",
+          "rfc_reference": null,
+          "template": "CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-query-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-query-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "sbelt",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "rsvSlistLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:nameserver-recv-query-unbounded": {
+      "rule_id": "DNS:nameserver-recv-query-unbounded",
+      "rule_name": "nameserver-recv-query-unbounded",
+      "actor_role": "Nameserver",
+      "event_pattern": "recv query(...)",
+      "guard_slots": [
+        {
+          "slot_id": "nameserver-recv-query-unbounded-guard",
+          "description": "Condition for nameserver-recv-query-unbounded",
+          "rfc_reference": null,
+          "template": "RESP := matchDown(ID, QNAME, QTYPE, DB)"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "nameserver-recv-query-unbounded-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "db",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "nsQueryLog",
+        "nsRespLog"
+      ],
+      "state_writes": [],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-ans-for-client": {
+      "rule_id": "DNS:resolver-recv-ans-for-client",
+      "rule_name": "resolver-recv-ans-for-client",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-ans-for-client-guard",
+          "description": "Condition for resolver-recv-ans-for-client",
+          "rfc_reference": null,
+          "template": "hasFollowUpQueryInQSSForId(ID, QSS ;; QSS') then IN else removeFromIdNatMap(ID, IN) fi,\n                     blockedQueries: QSS,\n                     sentQueries: QSS',\n                     STATE >\n  (to ADDR from RSV : convertTTLAbsToRelResponse(RESP, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-ans-for-client-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-ans-for-client-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-ans-for-resolver": {
+      "rule_id": "DNS:resolver-recv-ans-for-resolver",
+      "rule_name": "resolver-recv-ans-for-resolver",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-ans-for-resolver-guard",
+          "description": "Condition for resolver-recv-ans-for-resolver",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', SLIST) := QSTATE /\\\n     \n     B or (SNAME == SNAME_FULL and qminQTYPE == QTYPE) or RCODE == 3 /\\\n     \n     rtype(head(ANS)) =/= cname or match(QTYPE, cname) /\\\n     \n     ANS == nil or ownerName(head(ANS)) == SNAME /\\\n     \n     CACHE_TMP := updateCacheAuthAns(nilCache, ANS, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-ans-for-resolver-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-ans-for-resolver-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-cname-reply-for-client-answered": {
+      "rule_id": "DNS:resolver-recv-cname-reply-for-client-answered",
+      "rule_name": "resolver-recv-cname-reply-for-client-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-for-client-answered-guard",
+          "description": "Condition for resolver-recv-cname-reply-for-client-answered",
+          "rfc_reference": null,
+          "template": "hasFollowUpQueryInQSSForId(ID, QSS ;; QSS') then IN else removeFromIdNatMap(ID, IN) fi,\n                     blockedQueries: QSS,\n                     sentQueries: QSS',\n                     STATE >\n  (to ADDR from RSV : convertTTLAbsToRelResponse(RESP, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-for-client-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-cname-reply-for-client-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-cname-reply-for-resolver-answered": {
+      "rule_id": "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "rule_name": "resolver-recv-cname-reply-for-resolver-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-for-resolver-answered-guard",
+          "description": "Condition for resolver-recv-cname-reply-for-resolver-answered",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', SLIST) := QSTATE /\\\n     \n     B or SNAME == SNAME_FULL /\\\n     \n     not(match(QTYPE, cname)) /\\\n     < SNAME, cname, TTL, NAME' > RS := ANS /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-for-resolver-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-cname-reply-for-resolver-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-cname-reply-not-answered": {
+      "rule_id": "DNS:resolver-recv-cname-reply-not-answered",
+      "rule_name": "resolver-recv-cname-reply-not-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-not-answered-guard",
+          "description": "Condition for resolver-recv-cname-reply-not-answered",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', SLIST) := QSTATE /\\\n     \n     B or SNAME == SNAME_FULL /\\\n     \n     not(match(QTYPE, cname)) /\\\n     < SNAME, cname, TTL, NAME' > RS := ANS /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-cname-reply-not-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-cname-reply-not-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "sbelt",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "rsvSlistLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-dname-reply-for-client-answered": {
+      "rule_id": "DNS:resolver-recv-dname-reply-for-client-answered",
+      "rule_name": "resolver-recv-dname-reply-for-client-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-for-client-answered-guard",
+          "description": "Condition for resolver-recv-dname-reply-for-client-answered",
+          "rfc_reference": null,
+          "template": "hasFollowUpQueryInQSSForId(ID, QSS ;; QSS') then IN else removeFromIdNatMap(ID, IN) fi,\n                     blockedQueries: QSS,\n                     sentQueries: QSS',\n                     STATE >\n  (to ADDR from RSV : convertTTLAbsToRelResponse(RESP, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-for-client-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-dname-reply-for-client-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-dname-reply-for-resolver-answered": {
+      "rule_id": "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "rule_name": "resolver-recv-dname-reply-for-resolver-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-for-resolver-answered-guard",
+          "description": "Condition for resolver-recv-dname-reply-for-resolver-answered",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', SLIST) := QSTATE /\\\n     \n     \n     R RS := ANS /\\\n     < NAME'', dname, TTL, NAME''' > := R /\\\n     NAME'' =/= SNAME /\\\n     RS' := if RS == nil then nil else tail(RS) fi /\\\n     \n     < SNAME_FULL, cname, TTL, NAME' > := dnameSynthesis(SNAME_FULL, R) /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-for-resolver-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-dname-reply-for-resolver-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-dname-reply-not-answered": {
+      "rule_id": "DNS:resolver-recv-dname-reply-not-answered",
+      "rule_name": "resolver-recv-dname-reply-not-answered",
+      "actor_role": "Resolver",
+      "event_pattern": "recv response(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-not-answered-guard",
+          "description": "Condition for resolver-recv-dname-reply-not-answered",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', SLIST) := QSTATE /\\\n     \n     \n     R RS := ANS /\\\n     < NAME'', dname, TTL, NAME''' > := R /\\\n     NAME'' =/= SNAME /\\\n     RS' := if RS == nil then nil else tail(RS) fi /\\\n     \n     < SNAME_FULL, cname, TTL, NAME' > := dnameSynthesis(SNAME_FULL, R) /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-dname-reply-not-answered-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-dname-reply-not-answered-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "sbelt",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvRewriteLog",
+        "rsvSlistLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-referral-reply": {
+      "rule_id": "DNS:resolver-recv-referral-reply",
+      "rule_name": "resolver-recv-referral-reply",
+      "actor_role": "Resolver",
+      "event_pattern": "recv referral(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-referral-reply-guard",
+          "description": "Condition for resolver-recv-referral-reply",
+          "rfc_reference": null,
+          "template": "filterRType(ns, AUTH) =/= nil /\\\n     \n     queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', < NAME NA >) := QSTATE /\\\n     delegationIsBetter(SNAME_FULL, AUTH, NAME) /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-referral-reply-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-referral-reply-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "sbelt",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "rsvSlistLog",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-qmin-noerror-reply": {
+      "rule_id": "DNS:resolver-recv-qmin-noerror-reply",
+      "rule_name": "resolver-recv-qmin-noerror-reply",
+      "actor_role": "Resolver",
+      "event_pattern": "unknown_event",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-qmin-noerror-reply-guard",
+          "description": "Condition for resolver-recv-qmin-noerror-reply",
+          "rfc_reference": null,
+          "template": "rtype(head(ANS)) =/= dname or ownerName(head(ANS)) == SNAME /\\\n     \n     RCODE == 0 or (RCODE == 3 and rtype(head(ANS)) == cname) /\\\n     \n     ANS =/= nil or filterRType(ns, AUTH) == nil /\\\n     \n     queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', false), ANS', < NAME NA >) := QSTATE /\\\n     SNAME =/= SNAME_FULL or (qminQTYPE =/= QTYPE and rtype(head(ANS)) =/= cname) /\\\n     \n     CACHE_UNEXPIRED := filterCacheTTLGreaterEqual(CACHE, 0"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-qmin-noerror-reply-cache-update",
+          "action_type": "cache_operation",
+          "description": "Update cache with new records",
+          "rfc_reference": null,
+          "template": null
+        },
+        {
+          "slot_id": "resolver-recv-qmin-noerror-reply-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "cache",
+        "nxdomainCache",
+        "nodataCache",
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent",
+        "_"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-bad-referral-reply-for-client": {
+      "rule_id": "DNS:resolver-recv-bad-referral-reply-for-client",
+      "rule_name": "resolver-recv-bad-referral-reply-for-client",
+      "actor_role": "Resolver",
+      "event_pattern": "recv referral(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-bad-referral-reply-for-client-guard",
+          "description": "Condition for resolver-recv-bad-referral-reply-for-client",
+          "rfc_reference": null,
+          "template": "filterRType(ns, AUTH) =/= nil /\\\n     \n     queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', < NAME NA >) := QSTATE /\\\n     not(delegationIsBetter(SNAME_FULL, AUTH, NAME)) /\\\n     \n     ADDR =/= RSV /\\\n     \n     NA' := removeNamesFromSLISTMap(NA, namesForAddressSLIST(NA, NS)) /\\\n     \n     NA'' := removeNamesWithoutSubqueriesFromSLISTMap(NA', QSS ;; QSS', ID) /\\\n     QSTATE' := queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID'"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-bad-referral-reply-for-client-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-bad-referral-reply-for-resolver": {
+      "rule_id": "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "rule_name": "resolver-recv-bad-referral-reply-for-resolver",
+      "actor_role": "Resolver",
+      "event_pattern": "recv referral(...)",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-bad-referral-reply-for-resolver-guard",
+          "description": "Condition for resolver-recv-bad-referral-reply-for-resolver",
+          "rfc_reference": null,
+          "template": "filterRType(ns, AUTH) =/= nil /\\\n     \n     queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', < NAME NA >) := QSTATE /\\\n     not(delegationIsBetter(SNAME_FULL, AUTH, NAME)) /\\\n     \n     NA' := removeNamesFromSLISTMap(NA, namesForAddressSLIST(NA, NS)) /\\\n     \n     NA'' := removeNamesWithoutSubqueriesFromSLISTMap(NA', QSS ;; QSS', ID) /\\\n     QSTATE' := queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID'"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-bad-referral-reply-for-resolver-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-refused-reply-for-client": {
+      "rule_id": "DNS:resolver-recv-refused-reply-for-client",
+      "rule_name": "resolver-recv-refused-reply-for-client",
+      "actor_role": "Resolver",
+      "event_pattern": "unknown_event",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-refused-reply-for-client-guard",
+          "description": "Condition for resolver-recv-refused-reply-for-client",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', < NAME NA >) := QSTATE /\\\n     \n     ADDR =/= RSV /\\\n     \n     NA' := removeNamesFromSLISTMap(NA, namesForAddressSLIST(NA, NS)) /\\\n     \n     NA'' := removeNamesWithoutSubqueriesFromSLISTMap(NA', QSS ;; QSS', ID) /\\\n     QSTATE' := queryState(query(ID, QNAME, QTYPE), ADDR, SNAME, ID'"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-refused-reply-for-client-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent"
+      ],
+      "state_writes": [
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    },
+    "DNS:resolver-recv-refused-reply-for-resolver": {
+      "rule_id": "DNS:resolver-recv-refused-reply-for-resolver",
+      "rule_name": "resolver-recv-refused-reply-for-resolver",
+      "actor_role": "Resolver",
+      "event_pattern": "unknown_event",
+      "guard_slots": [
+        {
+          "slot_id": "resolver-recv-refused-reply-for-resolver-guard",
+          "description": "Condition for resolver-recv-refused-reply-for-resolver",
+          "rfc_reference": null,
+          "template": "queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID', qminState(SNAME_FULL, N, N', B), ANS', < NAME NA >) := QSTATE /\\\n     \n     NA' := removeNamesFromSLISTMap(NA, namesForAddressSLIST(NA, NS)) /\\\n     \n     NA'' := removeNamesWithoutSubqueriesFromSLISTMap(NA', QSS ;; QSS', ID) /\\\n     QSTATE' := queryState(query(ID, QNAME, QTYPE), RSV, SNAME, ID'"
+        }
+      ],
+      "action_slots": [
+        {
+          "slot_id": "resolver-recv-refused-reply-for-resolver-send-msg",
+          "action_type": "send_message",
+          "description": "Send message to another actor",
+          "rfc_reference": null,
+          "template": null
+        }
+      ],
+      "state_reads": [
+        "workBudget",
+        "blockedQueries",
+        "sentQueries",
+        "msgsRcv",
+        "msgsSent",
+        "totalRcv",
+        "totalSent"
+      ],
+      "state_writes": [
+        "sentQueries",
+        "_"
+      ],
+      "message_sends": [],
+      "is_conditional": true,
+      "defined_in": "DNS",
+      "rfc_references": []
+    }
+  },
+  "modules": {
+    "ADDRESS": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "pr",
+          "module": "NAT"
+        },
+        {
+          "type": "pr",
+          "module": "QID"
+        }
+      ],
+      "sorts_defined": [
+        "Address",
+        "AddrSet",
+        "AddrList"
+      ],
+      "rules_defined": [],
+      "operators_count": 5,
+      "equations_count": 0
+    },
+    "ACTOR-MODEL": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "pr",
+          "module": "ADDRESS"
+        },
+        {
+          "type": "pr",
+          "module": "FLOAT"
+        }
+      ],
+      "sorts_defined": [
+        "Actor",
+        "Config",
+        "ActorConfig",
+        "PairConfig",
+        "Msg",
+        "ActorType",
+        "Attribute",
+        "AttributeSet",
+        "Content"
+      ],
+      "rules_defined": [],
+      "operators_count": 9,
+      "equations_count": 0
+    },
+    "SORTS": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "ADDRESS"
+        },
+        {
+          "type": "pr",
+          "module": "FLOAT"
+        }
+      ],
+      "sorts_defined": [
+        "Name",
+        "NameList",
+        "NameSet",
+        "RType",
+        "RData",
+        "Record",
+        "CacheEntry",
+        "Cache",
+        "NxdomainEntry",
+        "NxdomainCache",
+        "NodataEntry",
+        "NodataCache",
+        "Query"
+      ],
+      "rules_defined": [],
+      "operators_count": 29,
+      "equations_count": 0
+    },
+    "SORTS-AUX": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "SORTS"
+        },
+        {
+          "type": "pr",
+          "module": "LIST"
+        },
+        {
+          "type": "pr",
+          "module": "Record"
+        },
+        {
+          "type": "pr",
+          "module": "LIST"
+        },
+        {
+          "type": "pr",
+          "module": "Query"
+        },
+        {
+          "type": "pr",
+          "module": "MAP"
+        },
+        {
+          "type": "pr",
+          "module": "Name"
+        },
+        {
+          "type": "pr",
+          "module": "Address"
+        }
+      ],
+      "sorts_defined": [
+        "ZoneState"
+      ],
+      "rules_defined": [],
+      "operators_count": 2,
+      "equations_count": 0
+    },
+    "MSG": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "SORTS-AUX"
+        },
+        {
+          "type": "inc",
+          "module": "ACTOR-MODEL"
+        }
+      ],
+      "sorts_defined": [
+        "Id",
+        "IdList",
+        "Response"
+      ],
+      "rules_defined": [],
+      "operators_count": 15,
+      "equations_count": 0
+    },
+    "NODE": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "ACTOR-MODEL"
+        },
+        {
+          "type": "inc",
+          "module": "SORTS-AUX"
+        },
+        {
+          "type": "inc",
+          "module": "MSG"
+        }
+      ],
+      "sorts_defined": [
+        "QueryState",
+        "QueryStateSet",
+        "QMinState",
+        "PairQueryStateSet",
+        "IdNatEntry",
+        "IdNatMap",
+        "TupleQSSQSSIdNatMap",
+        "QueueEntry",
+        "Queue"
+      ],
+      "rules_defined": [],
+      "operators_count": 27,
+      "equations_count": 0
+    },
+    "MONITOR": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "ACTOR-MODEL"
+        },
+        {
+          "type": "inc",
+          "module": "MSG"
+        }
+      ],
+      "sorts_defined": [
+        "AddrFloatEntry",
+        "AddrFloatMap",
+        "IdFloatEntry",
+        "IdFloatMap",
+        "IdAddrFloatEntry",
+        "IdAddrFloatMap",
+        "IdAddrListEntry",
+        "IdAddrListMap",
+        "TupleAddrQuery",
+        "TupleAddrQueryList",
+        "TupleAddrResp",
+        "TupleAddrRespList",
+        "TupleAddrRecs",
+        "TupleAddrRecsSet",
+        "TupleNameRecs",
+        "TupleNameRecsList",
+        "TupleSlistArgs",
+        "TupleSlistArgsList"
+      ],
+      "rules_defined": [],
+      "operators_count": 47,
+      "equations_count": 0
+    },
+    "AUX-COMMON": {
+      "type": "mod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "NODE"
+        },
+        {
+          "type": "inc",
+          "module": "MONITOR"
+        },
+        {
+          "type": "inc",
+          "module": "SORTS"
+        },
+        {
+          "type": "inc",
+          "module": "PARAMETERS-COMMON"
+        },
+        {
+          "type": "inc",
+          "module": "CONVERSION"
+        }
+      ],
+      "sorts_defined": [],
+      "rules_defined": [],
+      "operators_count": 92,
+      "equations_count": 263
+    },
+    "PARAMETERS-COMMON": {
+      "type": "mod",
+      "imports": [
+        {
+          "type": "pr",
+          "module": "NAT"
+        },
+        {
+          "type": "pr",
+          "module": "FLOAT"
+        },
+        {
+          "type": "inc",
+          "module": "SORTS"
+        }
+      ],
+      "sorts_defined": [],
+      "rules_defined": [],
+      "operators_count": 25,
+      "equations_count": 25
+    },
+    "LABEL-GRAPH": {
+      "type": "mod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "AUX-COMMON"
+        }
+      ],
+      "sorts_defined": [
+        "LabelTree",
+        "LabelForest"
+      ],
+      "rules_defined": [
+        "pick-name",
+        "pick-type-a",
+        "pick-type-ns",
+        "pick-type-soa",
+        "pick-type-cname",
+        "pick-type-txt"
+      ],
+      "operators_count": 20,
+      "equations_count": 32
+    },
+    "AUX": {
+      "type": "mod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "AUX-COMMON"
+        },
+        {
+          "type": "inc",
+          "module": "ADDRESS"
+        }
+      ],
+      "sorts_defined": [],
+      "rules_defined": [
+        "pick-addr",
+        "pick-addr-null"
+      ],
+      "operators_count": 2,
+      "equations_count": 6
+    },
+    "DNS": {
+      "type": "mod",
+      "imports": [
+        {
+          "type": "inc",
+          "module": "AUX"
+        },
+        {
+          "type": "inc",
+          "module": "MSG"
+        }
+      ],
+      "sorts_defined": [],
+      "rules_defined": [
+        "client-start",
+        "client-recv-resp-send-next",
+        "resolver-reply-local",
+        "resolver-recv-query",
+        "nameserver-recv-query-unbounded",
+        "resolver-recv-ans-for-client",
+        "resolver-recv-ans-for-resolver",
+        "resolver-recv-cname-reply-for-client-answered",
+        "resolver-recv-cname-reply-for-resolver-answered",
+        "resolver-recv-cname-reply-not-answered",
+        "resolver-recv-dname-reply-for-client-answered",
+        "resolver-recv-dname-reply-for-resolver-answered",
+        "resolver-recv-dname-reply-not-answered",
+        "resolver-recv-referral-reply",
+        "resolver-recv-qmin-noerror-reply",
+        "resolver-recv-bad-referral-reply-for-client",
+        "resolver-recv-bad-referral-reply-for-resolver",
+        "resolver-recv-refused-reply-for-client",
+        "resolver-recv-refused-reply-for-resolver"
+      ],
+      "operators_count": 0,
+      "equations_count": 0
+    }
+  },
+  "sort_hierarchy": {
+    "AddrSet": [
+      "Address"
+    ],
+    "Config": [
+      "Msg"
+    ],
+    "ActorConfig": [
+      "Actor"
+    ],
+    "AttributeSet": [
+      "Attribute"
+    ],
+    "NameList": [
+      "Name"
+    ],
+    "Name": [
+      "Qid"
+    ],
+    "Address": [
+      "Nat"
+    ],
+    "RData": [
+      "Name",
+      "Address"
+    ],
+    "Cache": [
+      "CacheEntry"
+    ],
+    "NxdomainCache": [
+      "NxdomainEntry"
+    ],
+    "NodataCache": [
+      "NodataEntry"
+    ],
+    "Id": [
+      "Nat"
+    ],
+    "IdList": [
+      "Id"
+    ],
+    "Content": [
+      "Query",
+      "Response"
+    ],
+    "QueryStateSet": [
+      "QueryState"
+    ],
+    "IdNatMap": [
+      "IdNatEntry"
+    ],
+    "Queue": [
+      "QueueEntry"
+    ],
+    "AddrFloatMap": [
+      "AddrFloatEntry"
+    ],
+    "IdFloatMap": [
+      "IdFloatEntry"
+    ],
+    "IdAddrFloatMap": [
+      "IdAddrFloatEntry"
+    ],
+    "IdAddrListMap": [
+      "IdAddrListEntry"
+    ],
+    "TupleAddrQueryList": [
+      "TupleAddrQuery"
+    ],
+    "TupleAddrRespList": [
+      "TupleAddrResp"
+    ],
+    "TupleAddrRecsSet": [
+      "TupleAddrRecs"
+    ],
+    "TupleNameRecsList": [
+      "TupleNameRecs"
+    ],
+    "TupleSlistArgsList": [
+      "TupleSlistArgs"
+    ],
+    "LabelForest": [
+      "LabelTree"
+    ]
+  }
+}

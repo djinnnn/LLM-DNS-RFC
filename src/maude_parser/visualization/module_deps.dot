@@ -1,0 +1,38 @@
+digraph ModuleDeps {
+  rankdir=TB;  // Top to Bottom
+  node [shape=box, fontname="Helvetica"];
+
+  "ADDRESS" [label="ADDRESS", fillcolor="#E8F4F8", style="filled", shape=box];
+  "ACTOR-MODEL" [label="ACTOR-MODEL", fillcolor="#E8F4F8", style="filled", shape=box];
+  "SORTS" [label="SORTS", fillcolor="#E8F4F8", style="filled", shape=box];
+  "SORTS-AUX" [label="SORTS-AUX", fillcolor="#E8F4F8", style="filled", shape=box];
+  "MSG" [label="MSG", fillcolor="#E8F4F8", style="filled", shape=box];
+  "NODE" [label="NODE", fillcolor="#E8F4F8", style="filled", shape=box];
+  "MONITOR" [label="MONITOR", fillcolor="#E8F4F8", style="filled", shape=box];
+  "AUX-COMMON" [label="AUX-COMMON", fillcolor="#FFF4E6", style="filled", shape=box3d];
+  "PARAMETERS-COMMON" [label="PARAMETERS-COMMON", fillcolor="#FFF4E6", style="filled", shape=box3d];
+  "LABEL-GRAPH" [label="LABEL-GRAPH", fillcolor="#FFF4E6", style="filled", shape=box3d];
+  "AUX" [label="AUX", fillcolor="#FFF4E6", style="filled", shape=box3d];
+  "DNS" [label="DNS", fillcolor="#FFF4E6", style="filled", shape=box3d];
+
+  "ACTOR-MODEL" -> "ADDRESS" [style=dashed, color="#666666"];
+  "SORTS" -> "ADDRESS" [style=solid, color="#0066CC"];
+  "SORTS-AUX" -> "SORTS" [style=solid, color="#0066CC"];
+  "MSG" -> "SORTS-AUX" [style=solid, color="#0066CC"];
+  "MSG" -> "ACTOR-MODEL" [style=solid, color="#0066CC"];
+  "NODE" -> "ACTOR-MODEL" [style=solid, color="#0066CC"];
+  "NODE" -> "SORTS-AUX" [style=solid, color="#0066CC"];
+  "NODE" -> "MSG" [style=solid, color="#0066CC"];
+  "MONITOR" -> "ACTOR-MODEL" [style=solid, color="#0066CC"];
+  "MONITOR" -> "MSG" [style=solid, color="#0066CC"];
+  "AUX-COMMON" -> "NODE" [style=solid, color="#0066CC"];
+  "AUX-COMMON" -> "MONITOR" [style=solid, color="#0066CC"];
+  "AUX-COMMON" -> "SORTS" [style=solid, color="#0066CC"];
+  "AUX-COMMON" -> "PARAMETERS-COMMON" [style=solid, color="#0066CC"];
+  "PARAMETERS-COMMON" -> "SORTS" [style=solid, color="#0066CC"];
+  "LABEL-GRAPH" -> "AUX-COMMON" [style=solid, color="#0066CC"];
+  "AUX" -> "AUX-COMMON" [style=solid, color="#0066CC"];
+  "AUX" -> "ADDRESS" [style=solid, color="#0066CC"];
+  "DNS" -> "AUX" [style=solid, color="#0066CC"];
+  "DNS" -> "MSG" [style=solid, color="#0066CC"];
+}

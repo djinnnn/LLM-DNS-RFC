@@ -1,0 +1,65 @@
+# LLM action 关键词 → Maude action type
+# 分为两类：
+#   1. 已有 Maude action type（来自 maude_contract.json）
+#   2. 扩展 action type（覆盖常见 LLM 输出模式，仍生成可用骨架）
+# 无法匹配的将标记为 unresolved
+
+# ── 已有 Maude action types ──
+
+send_message:
+  - "send"
+  - "respond"
+  - "reply"
+  - "forward"
+  - "transmit"
+  - "return response"
+  - "send response"
+  - "send query"
+  - "transport"
+  - "deliver"
+  - "accept"
+
+cache_operation:
+  - "cache"
+  - "store in cache"
+  - "update cache"
+  - "add to cache"
+  - "remove from cache"
+  - "flush cache"
+  - "invalidate cache"
+
+# ── 扩展 action types ──
+
+state_update:
+  - "state_update"
+  - "update state"
+  - "set"
+  - "modify"
+  - "remember"
+  - "store"
+  - "record"
+  - "save"
+  - "mark"
+  - "flag"
+
+drop:
+  - "drop"
+  - "discard"
+  - "reject"
+  - "refuse"
+  - "deny"
+  - "block"
+
+ignore:
+  - "ignore"
+  - "skip"
+  - "no action"
+  - "do nothing"
+
+error:
+  - "error"
+  - "abort"
+  - "fail"
+  - "terminate"
+  - "close connection"
+  - "reset"

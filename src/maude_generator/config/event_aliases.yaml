@@ -1,0 +1,55 @@
+# LLM event type 别名 → Maude event pattern
+# 只包含 maude_contract.json rules 中已有的 event_pattern
+# 无法匹配的将标记为 unresolved
+
+"init":
+  - "initialization"
+  - "init"
+  - "startup"
+  - "start"
+  - "boot"
+  - "internal"
+  - "initiating"
+  - "setup"
+  - "configure"
+
+"recv query(...)":
+  - "receive query"
+  - "recv query"
+  - "query received"
+  - "incoming query"
+  - "receive dns query"
+
+"recv response(...)":
+  - "receive response"
+  - "recv response"
+  - "response received"
+  - "incoming response"
+  - "receive answer"
+  - "receive reply"
+
+"recv referral(...)":
+  - "receive referral"
+  - "recv referral"
+  - "referral received"
+  - "incoming referral"
+
+"recv message(...)":
+  - "receive message"
+  - "recv message"
+  - "receiving"
+  - "incoming message"
+
+"send message(...)":
+  - "send message"
+  - "sending"
+  - "transporting"
+  - "transmitting"
+
+"timeout":
+  - "timeout"
+  - "timer expiry"
+  - "timer expired"
+  - "timed out"
+  - "connection timeout"
+  - "failed"

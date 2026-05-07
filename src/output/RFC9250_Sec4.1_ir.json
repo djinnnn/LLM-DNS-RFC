@@ -1,0 +1,51 @@
+{
+  "semantic_rules": [
+    {
+      "id": "doq-alpn-token-selection",
+      "modality": "UNSPECIFIED",
+      "actor": {
+        "name": "endpoint",
+        "type": "endpoint"
+      },
+      "event": {
+        "kind": "state_trigger",
+        "expr": "During connection establishment in the crypto handshake"
+      },
+      "conditions": [
+        {
+          "kind": "predicate",
+          "expr": "DoQ support is to be indicated"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "send",
+          "expr": "select the Application-Layer Protocol Negotiation (ALPN) token \"doq\""
+        }
+      ],
+      "provenance": {
+        "document": "RFC9250",
+        "section": "RFC9250_Sec4.1",
+        "anchor": "ALPN token \"doq\"",
+        "source_text": "During connection establishment, DoQ support is indicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake."
+      },
+      "_normalized": {
+        "rule_id": "doq-alpn-token-selection",
+        "resolved": false,
+        "modality": null,
+        "actor_type": null,
+        "event_pattern": null,
+        "action_types": [
+          "send_message"
+        ],
+        "predicates": [
+          {
+            "original_expr": "DoQ support is to be indicated",
+            "matched_predicates": [],
+            "resolved": false
+          }
+        ]
+      }
+    }
+  ]
+}

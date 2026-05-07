@@ -1,5 +1,5 @@
 from typing import Dict, Any, List, Set, Optional
-from graph_knowledge_base import GraphKnowledgeBase
+from .graph_knowledge_base import GraphKnowledgeBase
 import numpy as np
 from sentence_transformers import SentenceTransformer
 

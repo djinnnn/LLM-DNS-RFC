@@ -1,0 +1,304 @@
+{
+  "metadata": {
+    "model_type": "nondet-dns",
+    "version": "1.0",
+    "total_modules": 2,
+    "total_actors": 0,
+    "total_rules": 0
+  },
+  "sorts": {
+    "Address": {
+      "name": "Address",
+      "constructors": [
+        {
+          "name": "nullAddr",
+          "params": []
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "AddrSet"
+      ],
+      "defined_in": "ADDRESS",
+      "used_by_actors": []
+    },
+    "AddrSet": {
+      "name": "AddrSet",
+      "constructors": [
+        {
+          "name": "ept",
+          "params": []
+        },
+        {
+          "name": "_;;_",
+          "params": [
+            "AddrSet",
+            "AddrSet"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [
+        "Address"
+      ],
+      "supersorts": [],
+      "defined_in": "ADDRESS",
+      "used_by_actors": []
+    },
+    "AddrList": {
+      "name": "AddrList",
+      "constructors": [
+        {
+          "name": "nil",
+          "params": []
+        },
+        {
+          "name": "_;_",
+          "params": [
+            "AddrList",
+            "AddrList"
+          ]
+        }
+      ],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ADDRESS",
+      "used_by_actors": []
+    },
+    "Actor": {
+      "name": "Actor",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "<_:_|_>",
+          "arity": [
+            "Address",
+            "ActorType",
+            "AttributeSet"
+          ],
+          "coarity": "Actor"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "ActorConfig"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Config": {
+      "name": "Config",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "__",
+          "arity": [
+            "Config",
+            "Config"
+          ],
+          "coarity": "Config"
+        }
+      ],
+      "subsorts": [
+        "Msg"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "ActorConfig": {
+      "name": "ActorConfig",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "null",
+          "arity": [],
+          "coarity": "ActorConfig"
+        },
+        {
+          "name": "__",
+          "arity": [
+            "ActorConfig",
+            "ActorConfig"
+          ],
+          "coarity": "ActorConfig"
+        }
+      ],
+      "subsorts": [
+        "Actor"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "PairConfig": {
+      "name": "PairConfig",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "pairConfig",
+          "arity": [
+            "Config",
+            "Config"
+          ],
+          "coarity": "PairConfig"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Msg": {
+      "name": "Msg",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "to_from_:_",
+          "arity": [
+            "Address",
+            "Address",
+            "Content"
+          ],
+          "coarity": "Msg"
+        },
+        {
+          "name": "to_:_",
+          "arity": [
+            "Address",
+            "Content"
+          ],
+          "coarity": "Msg"
+        }
+      ],
+      "subsorts": [],
+      "supersorts": [
+        "Config"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "ActorType": {
+      "name": "ActorType",
+      "constructors": [],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Attribute": {
+      "name": "Attribute",
+      "constructors": [],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [
+        "AttributeSet"
+      ],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "AttributeSet": {
+      "name": "AttributeSet",
+      "constructors": [],
+      "operators": [
+        {
+          "name": "noneAS",
+          "arity": [],
+          "coarity": "AttributeSet"
+        },
+        {
+          "name": "_,_",
+          "arity": [
+            "AttributeSet",
+            "AttributeSet"
+          ],
+          "coarity": "AttributeSet"
+        }
+      ],
+      "subsorts": [
+        "Attribute"
+      ],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    },
+    "Content": {
+      "name": "Content",
+      "constructors": [],
+      "operators": [],
+      "subsorts": [],
+      "supersorts": [],
+      "defined_in": "ACTOR-MODEL",
+      "used_by_actors": []
+    }
+  },
+  "actors": {},
+  "rules": {},
+  "modules": {
+    "ADDRESS": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "pr",
+          "module": "NAT"
+        },
+        {
+          "type": "pr",
+          "module": "QID"
+        }
+      ],
+      "sorts_defined": [
+        "Address",
+        "AddrSet",
+        "AddrList"
+      ],
+      "rules_defined": [],
+      "operators_count": 5,
+      "equations_count": 0
+    },
+    "ACTOR-MODEL": {
+      "type": "fmod",
+      "imports": [
+        {
+          "type": "pr",
+          "module": "ADDRESS"
+        },
+        {
+          "type": "pr",
+          "module": "FLOAT"
+        }
+      ],
+      "sorts_defined": [
+        "Actor",
+        "Config",
+        "ActorConfig",
+        "PairConfig",
+        "Msg",
+        "ActorType",
+        "Attribute",
+        "AttributeSet",
+        "Content"
+      ],
+      "rules_defined": [],
+      "operators_count": 9,
+      "equations_count": 0
+    }
+  },
+  "sort_hierarchy": {
+    "AddrSet": [
+      "Address"
+    ],
+    "Config": [
+      "Msg"
+    ],
+    "ActorConfig": [
+      "Actor"
+    ],
+    "AttributeSet": [
+      "Attribute"
+    ]
+  }
+}

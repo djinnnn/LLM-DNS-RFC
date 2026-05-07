@@ -198,25 +198,52 @@ class RFCGraphBuilder:
         sections: List[Dict[str, Any]] = []
 
         for sec in root.iter():
-            if self._strip_ns(sec.tag) != "section":
-                continue
+            tag = self._strip_ns(sec.tag)
 
-            sec_num = self._extract_xml_section_number(sec)
-            if not sec_num:
-                continue
+            if tag == "section":
+                sec_num = self._extract_xml_section_number(sec)
+                if not sec_num:
+                    continue
 
-            title = self._extract_xml_section_title(sec)
-            text = self._extract_xml_section_text(sec)
-            is_appendix = self._is_appendix_sec_num(sec_num)
+                title = self._extract_xml_section_title(sec)
+                text = self._extract_xml_section_text(sec)
+                is_appendix = self._is_appendix_sec_num(sec_num)
 
-            sections.append(
-                {
-                    "sec_num": sec_num,
-                    "title": title,
-                    "text": text,
-                    "is_appendix": is_appendix,
-                }
-            )
+                sections.append(
+                    {
+                        "sec_num": sec_num,
+                        "title": title,
+                        "text": text,
+                        "is_appendix": is_appendix,
+                    }
+                )
+
+            elif tag == "references":
+                # RFC XML 的引用章节使用 <references> 而非 <section>
+                sec_num = self._extract_xml_section_number(sec)
+                if not sec_num:
+                    continue
+
+                title = self._extract_xml_section_title(sec)
+
+                # 从 <reference> 子元素的 anchor 属性收集被引用的 RFC ID
+                ref_anchors = []
+                for child in sec:
+                    if self._strip_ns(child.tag) == "reference":
+                        anchor = child.get("anchor", "")
+                        if anchor:
+                            ref_anchors.append(f"[{anchor}]")
+
+                text = " ".join(ref_anchors)
+
+                sections.append(
+                    {
+                        "sec_num": sec_num,
+                        "title": title,
+                        "text": text,
+                        "is_appendix": False,
+                    }
+                )
 
         return sections
 
@@ -244,7 +271,7 @@ class RFCGraphBuilder:
     def _extract_xml_section_text(self, sec: ET.Element) -> str:
         """
         仅提取当前 section 的“直属内容”，排除嵌套 subsection。
-        保留段落边界。
+        保留段落边界。对 <xref target="RFC1035"/> 注入 [RFC1035] 文本以保留引用信息。
         """
         parts: List[str] = []
 
@@ -254,11 +281,34 @@ class RFCGraphBuilder:
             if tag in {"section", "name"}:
                 continue
 
-            text = "".join(child.itertext()).strip()
+            text = self._extract_element_text_with_xrefs(child).strip()
             if text:
                 parts.append(text)
 
         return "\n\n".join(parts).strip()
+
+    def _extract_element_text_with_xrefs(self, elem: ET.Element) -> str:
+        """
+        递归提取元素文本，遇到 <xref> 标签时将 target 属性注入为 [target] 格式。
+        例如 <xref target="RFC1035"/> 会变成 [RFC1035]。
+        """
+        fragments: List[str] = []
+        if elem.text:
+            fragments.append(elem.text)
+        for child in elem:
+            if self._strip_ns(child.tag) == "xref":
+                target = child.get("target", "")
+                # 注入引用标记
+                display = child.text or ""
+                if target:
+                    fragments.append(f"{display}[{target}]")
+                else:
+                    fragments.append(display)
+            else:
+                fragments.append(self._extract_element_text_with_xrefs(child))
+            if child.tail:
+                fragments.append(child.tail)
+        return "".join(fragments)
 
     # =========================
     # TXT parsing

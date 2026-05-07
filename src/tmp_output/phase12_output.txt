@@ -1,0 +1,162 @@
+[Phase1] 从缓存加载图谱: 57 nodes, 50 edges
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  1. Seed 节点原文                                                        ║
+╚══════════════════════════════════════════════════════════════════════╝
+  ID:    RFC9250_Sec4.1
+  Title: Connection Establishment
+  Type:  Section
+  RFC:   RFC9250
+  SecNo: 4.1
+  Text length: 240 chars
+
+  ── 原文内容 ──
+DoQ connections are established as described in the QUIC transport
+specification . During connection establishment, DoQ support is
+indicated by selecting the Application-Layer Protocol Negotiation (ALPN) token "doq" in the crypto handshake.
+  ── 原文结束 ──
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  2. 图谱拓扑详情（以 Seed 为中心）                                               ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+  入度边 (1):
+    RFC9250_Sec4 "Specifications" --[has_subsection]--> RFC9250_Sec4.1
+
+  出度边 (1):
+    RFC9250_Sec4.1 --[has_subsection]--> RFC9250_Sec4.1.1 "Port Selection" (type=Section)
+
+  子节点详情:
+
+    ── RFC9250_Sec4.1.1 "Port Selection" (1077 chars) ──
+    By default, a DNS server that supports DoQ MUST listen for and accept QUIC
+connections on the dedicated UDP port 853 (), unless there is a mutual agreement to
+use another port.
+
+By default, a DNS client desiring to use DoQ with a particular server MUST
+establish a QUIC connection to UDP port 853 on the server, unless there is a
+mutual agreement to use another port.
+
+DoQ connections MUST NOT use UDP port 53. This recommendation against use of
+port 53 for DoQ is to avoid confusion between DoQ and ...
+
+  父节点详情:
+    RFC9250_Sec4 "Specifications" (0 chars)
+
+  RFC9250 全部 Section 节点:
+           1  RFC9250_Sec1                   "Introduction" (2608 chars)
+           2  RFC9250_Sec2                   "Key Words" (304 chars)
+           3  RFC9250_Sec3                   "Design Considerations" (182 chars)
+         3.1  RFC9250_Sec3.1                 "Provide DNS Privacy" (687 chars)
+         3.2  RFC9250_Sec3.2                 "Design for Minimum Latency" (1195 chars)
+         3.3  RFC9250_Sec3.3                 "Middlebox Considerations" (739 chars)
+         3.4  RFC9250_Sec3.4                 "No Server-Initiated Transactions" (447 chars)
+           4  RFC9250_Sec4                   "Specifications" (0 chars)
+         4.1  RFC9250_Sec4.1                 "Connection Establishment" (240 chars) ◄── SEED
+       4.1.1  RFC9250_Sec4.1.1               "Port Selection" (1077 chars)
+         4.2  RFC9250_Sec4.2                 "Stream Mapping and Usage" (2487 chars)
+       4.2.1  RFC9250_Sec4.2.1               "DNS Message IDs" (831 chars)
+         4.3  RFC9250_Sec4.3                 "DoQ Error Codes" (1356 chars)
+       4.3.1  RFC9250_Sec4.3.1               "Transaction Cancellation" (1705 chars)
+       4.3.2  RFC9250_Sec4.3.2               "Transaction Errors" (829 chars)
+       4.3.3  RFC9250_Sec4.3.3               "Protocol Errors" (1722 chars)
+       4.3.4  RFC9250_Sec4.3.4               "Alternative Error Codes" (619 chars)
+         4.4  RFC9250_Sec4.4                 "Connection Management" (1614 chars)
+         4.5  RFC9250_Sec4.5                 "Session Resumption and 0-RTT" (1486 chars)
+         4.6  RFC9250_Sec4.6                 "Message Sizes" (583 chars)
+           5  RFC9250_Sec5                   "Implementation Requirements" (0 chars)
+         5.1  RFC9250_Sec5.1                 "Authentication" (728 chars)
+         5.2  RFC9250_Sec5.2                 "Fallback to Other Protocols on Connection Failure" (832 chars)
+         5.3  RFC9250_Sec5.3                 "Address Validation" (958 chars)
+         5.4  RFC9250_Sec5.4                 "Padding" (1663 chars)
+         5.5  RFC9250_Sec5.5                 "Connection Handling" (204 chars)
+       5.5.1  RFC9250_Sec5.5.1               "Connection Reuse" (586 chars)
+       5.5.2  RFC9250_Sec5.5.2               "Resource Management" (1013 chars)
+       5.5.3  RFC9250_Sec5.5.3               "Using 0-RTT and Session Resumption" (1426 chars)
+       5.5.4  RFC9250_Sec5.5.4               "Controlling Connection Migration for Privacy" (361 chars)
+         5.6  RFC9250_Sec5.6                 "Processing Queries in Parallel" (344 chars)
+         5.7  RFC9250_Sec5.7                 "Zone Transfer" (1144 chars)
+         5.8  RFC9250_Sec5.8                 "Flow Control Mechanisms" (1552 chars)
+           6  RFC9250_Sec6                   "Security Considerations" (922 chars)
+           7  RFC9250_Sec7                   "Privacy Considerations" (866 chars)
+         7.1  RFC9250_Sec7.1                 "Privacy Issues with 0-RTT data" (1578 chars)
+         7.2  RFC9250_Sec7.2                 "Privacy Issues with Session Resumption" (1874 chars)
+         7.3  RFC9250_Sec7.3                 "Privacy Issues with Address Validation Tokens" (885 chars)
+         7.4  RFC9250_Sec7.4                 "Privacy Issues with Long Duration Sessions" (977 chars)
+         7.5  RFC9250_Sec7.5                 "Traffic Analysis" (577 chars)
+           8  RFC9250_Sec8                   "IANA Considerations" (0 chars)
+         8.1  RFC9250_Sec8.1                 "Registration of a DoQ Identification String" (398 chars)
+         8.2  RFC9250_Sec8.2                 "Reservation of a Dedicated Port" (1816 chars)
+         8.3  RFC9250_Sec8.3                 "Reservation of an Extended DNS Error Code: Too Early" (262 chars)
+         8.4  RFC9250_Sec8.4                 "DNS-over-QUIC Error Codes Registry" (3455 chars)
+    appendix.a  RFC9250_Secappendix.a          "The NOTIFY Service" (1206 chars)
+    appendix.b  RFC9250_Secappendix.b          "Acknowledgements" (782 chars)
+    appendix.c  RFC9250_Secappendix.c          "Authors' Addresses" (398 chars)
+    boilerplate.1  RFC9250_Secboilerplate.1       "Status of This Memo" (582 chars)
+    boilerplate.2  RFC9250_Secboilerplate.2       "Copyright Notice" (703 chars)
+       toc.1  RFC9250_Sectoc.1               "Table of Contents" (3980 chars)
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  3. ContextPack 构建结果                                                 ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+  [Trace]
+    [Seed] 锚定节点: RFC9250_Sec4.1
+    [Local] 获取到 1 个父级作用域, 1 个直接子节点
+    [Refs] 归一化后引用数: 0
+
+  [ContextPack 结构 (文本字段截断至300字符)]
+{
+  "seed": {
+    "node_type": "Section",
+    "section_id": "RFC9250_Sec4.1",
+    "rfc_id": "RFC9250",
+    "sec_num": "4.1",
+    "title": "Connection Establishment",
+    "text": "DoQ connections are established as described in the QUIC transport\nspecification . During connection establishment, DoQ support is\nindicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake.",
+    "is_appendix": false,
+    "is_reference_section": false,
+    "embedding_id": "RFC9250_Sec4.1",
+    "id": "RFC9250_Sec4.1"
+  },
+  "local_structure": {
+    "ancestors": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4",
+        "rfc_id": "RFC9250",
+        "sec_num": "4",
+        "title": "Specifications",
+        "is_appendix": false,
+        "is_reference_section": false,
+        "embedding_id": "RFC9250_Sec4"
+      }
+    ],
+    "descendants": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4.1.1",
+        "rfc_id": "RFC9250",
+        "sec_num": "4.1.1",
+        "title": "Port Selection",
+        "text": "By default, a DNS server that supports DoQ MUST listen for and accept QUIC\nconnections on the dedicated UDP port 853 (), unless there is a mutual agreement to\nuse another port.\n\nBy default, a DNS client desiring to use DoQ with a particular server MUST\nestablish a QUIC connection to UDP port 853 on ... [1077 chars total]",
+        "is_appendix": false,
+        "is_reference_section": false,
+        "embedding_id": "RFC9250_Sec4.1.1"
+      }
+    ]
+  },
+  "references": {
+    "normative": {
+      "section_level": [],
+      "document_level": []
+    },
+    "informative": {
+      "section_level": [],
+      "document_level": []
+    }
+  },
+  "semantic_expansion": []
+}
+
+  [OUTPUT] 完整 ContextPack 已保存: /Users/wuyue/0-我的/0-THU/0-网络测绘组/Projects/协议形式化/reproduce/dns-sigcomm/LLM-DNS-RFC/src/output/RFC9250_Sec4.1_context_pack_full.json

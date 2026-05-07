@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>受控查询与分层路由处理流程</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --border: #475569;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-cyan: #22d3ee;
+    --accent-green: #4ade80;
+    --accent-purple: #a78bfa;
+    --accent-orange: #fb923c;
+    --accent-red: #f87171;
+    --accent-yellow: #facc15;
+    --accent-pink: #f472b6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .title-bar {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(180deg, rgba(56,189,248,0.08) 0%, transparent 100%);
+  }
+  .title-bar h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+  }
+  .title-bar p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .canvas {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 30px 60px;
+    position: relative;
+  }
+
+  /* Phase containers */
+  .phase {
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-left: 4px;
+  }
+  .phase-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .phase-label {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .phase-sublabel {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-left: auto;
+    padding-right: 8px;
+  }
+
+  .phase-body {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Blocks */
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    flex: 1;
+    min-width: 280px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .block-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .block h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .block p, .block li {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .block ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .block ul li::before {
+    content: "›";
+    color: var(--accent-blue);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  /* Color schemes per phase */
+  .phase-0 .phase-num { background: rgba(167,139,250,0.2); color: var(--accent-purple); border: 2px solid var(--accent-purple); }
+  .phase-0 .phase-label { color: var(--accent-purple); }
+  .phase-0 .block { border-color: rgba(167,139,250,0.25); }
+  .phase-0 .block-tag { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+  .phase-0 .block h3 { color: var(--accent-purple); }
+
+  .phase-1 .phase-num { background: rgba(56,189,248,0.2); color: var(--accent-blue); border: 2px solid var(--accent-blue); }
+  .phase-1 .phase-label { color: var(--accent-blue); }
+  .phase-1 .block { border-color: rgba(56,189,248,0.25); }
+  .phase-1 .block-tag { background: rgba(56,189,248,0.15); color: var(--accent-blue); }
+  .phase-1 .block h3 { color: var(--accent-blue); }
+
+  .phase-2 .phase-num { background: rgba(251,146,60,0.2); color: var(--accent-orange); border: 2px solid var(--accent-orange); }
+  .phase-2 .phase-label { color: var(--accent-orange); }
+  .phase-2 .block { border-color: rgba(251,146,60,0.25); }
+  .phase-2 .block-tag { background: rgba(251,146,60,0.15); color: var(--accent-orange); }
+  .phase-2 .block h3 { color: var(--accent-orange); }
+
+  .phase-3 .phase-num { background: rgba(74,222,128,0.2); color: var(--accent-green); border: 2px solid var(--accent-green); }
+  .phase-3 .phase-label { color: var(--accent-green); }
+  .phase-3 .block { border-color: rgba(74,222,128,0.25); }
+  .phase-3 .block-tag { background: rgba(74,222,128,0.15); color: var(--accent-green); }
+  .phase-3 .block h3 { color: var(--accent-green); }
+
+  .phase-4 .phase-num { background: rgba(244,114,182,0.2); color: var(--accent-pink); border: 2px solid var(--accent-pink); }
+  .phase-4 .phase-label { color: var(--accent-pink); }
+  .phase-4 .block { border-color: rgba(244,114,182,0.25); }
+  .phase-4 .block-tag { background: rgba(244,114,182,0.15); color: var(--accent-pink); }
+  .phase-4 .block h3 { color: var(--accent-pink); }
+
+  /* Arrow connector between phases */
+  .arrow-connector {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+  }
+  .arrow-connector svg {
+    opacity: 0.4;
+  }
+
+  /* DET structure diagram */
+  .det-struct {
+    display: flex;
+    gap: 0;
+    margin: 12px 0 6px;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .det-seg {
+    padding: 8px 12px;
+    flex: 1;
+    min-width: 0;
+  }
+  .det-seg span {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .det-seg.raa { background: rgba(167,139,250,0.25); color: var(--accent-purple); }
+  .det-seg.hda { background: rgba(56,189,248,0.25); color: var(--accent-blue); }
+  .det-seg.hash { background: rgba(74,222,128,0.25); color: var(--accent-green); }
+
+  /* Scenario cards */
+  .scenarios {
+    display: flex;
+    gap: 14px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .scenario {
+    flex: 1;
+    min-width: 240px;
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .scenario h4 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .scenario.public {
+    background: rgba(56,189,248,0.08);
+    border: 1px solid rgba(56,189,248,0.2);
+  }
+  .scenario.public h4 { color: var(--accent-blue); }
+  .scenario.regulatory {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+  .scenario.regulatory h4 { color: var(--accent-red); }
+  .scenario ul li {
+    font-size: 12px;
+  }
+  .scenario .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .scenario.public .badge { background: rgba(56,189,248,0.2); color: var(--accent-blue); }
+  .scenario.regulatory .badge { background: rgba(248,113,113,0.2); color: var(--accent-red); }
+
+  /* Flow line */
+  .flow-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* Key/Ed25519 visual */
+  .key-visual {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 10px 14px;
+    background: rgba(167,139,250,0.08);
+    border-radius: 8px;
+    border: 1px dashed rgba(167,139,250,0.25);
+  }
+  .key-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .key-info {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .key-info strong {
+    color: var(--accent-purple);
+  }
+
+  /* Tooltip style inline code */
+  code {
+    background: rgba(56,189,248,0.1);
+    color: var(--accent-cyan);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .highlight-box {
+    background: rgba(250,204,21,0.06);
+    border-left: 3px solid var(--accent-yellow);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .highlight-box strong {
+    color: var(--accent-yellow);
+  }
+
+  /* Return flow */
+  .return-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .return-flow .rf-node {
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .return-flow .rf-arrow {
+    padding: 0 6px;
+    color: var(--accent-pink);
+    font-size: 20px;
+  }
+
+  /* Legend */
+  .legend {
+    margin-top: 30px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .legend h4 {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .legend-items {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 700px) {
+    .phase-body { flex-direction: column; }
+    .scenarios { flex-direction: column; }
+    .canvas { padding: 10px 12px 40px; }
+    .title-bar h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="title-bar">
+  <h1>受控查询与分层路由处理流程</h1>
+  <p>Controlled Query & Hierarchical Routing — 无人机网络身份体系示意图</p>
+</div>
+
+<div class="canvas">
+
+  <!-- ===== Phase 0 ===== -->
+  <div class="phase phase-0">
+    <div class="phase-header">
+      <div class="phase-num">0</div>
+      <div class="phase-label">身份准备（无人机端）</div>
+      <div class="phase-sublabel">Identity Preparation</div>
+    </div>
+    <div class="phase-body">
+      <!-- Block A -->
+      <div class="block">
+        <span class="block-tag">BLOCK A</span>
+        <h3>网络身份 ID 创建</h3>
+        <p>UOM 委派 RAA/HDA 地址段给云平台。无人机获得包含层级前缀的 <strong style="color:var(--accent-purple)">DET（网络标识符）</strong>。</p>
+        <div class="det-struct">
+          <div class="det-seg raa">RAA<span>Root Authority Agent</span></div>
+          <div class="det-seg hda">HDA<span>Hierarchical Domain Agent</span></div>
+          <div class="det-seg hash">Hash 指纹<span>公钥哈希 (cSHAKE128)</span></div>
+        </div>
+        <p style="font-size:11px; margin-top:6px; opacity:0.6;">▲ DET 结构：RAA 前缀 + HDA 前缀 + 公钥哈希指纹</p>
+      </div>
+      <!-- Block B -->
+      <div class="block">
+        <span class="block-tag">BLOCK B</span>
+        <h3>身份凭证生成</h3>
+        <div class="key-visual">
+          <div class="key-icon">🔑</div>
+          <div class="key-info">
+            <strong>Ed25519 密钥对</strong> — 本地生成<br>
+            <strong>HHSI 声明</strong> — 哈希和算法标识符<br>
+            <strong>cSHAKE128</strong> — 计算公钥哈希
+          </div>
+        </div>
+        <p>无人机在本地生成 Ed25519 密钥对和 HHSI 声明，计算公钥的 cSHAKE128 哈希。该哈希指纹成为 DET 的组成部分，作为<strong style="color:var(--accent-purple)">身份验证基石</strong>。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-connector">
+    <svg width="24" height="32" viewBox="0 0 24 32"><path d="M12 0 L12 24 M4 18 L12 28 L20 18" stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <!-- ===== Phase 1 ===== -->
+  <div class="phase phase-1">
+    <div class="phase-header">
+      <div class="phase-num">1</div>
+      <div class="phase-label">查询发起与接收（统一网关）</div>
+      <div class="phase-sublabel">Query Initiation & Gateway</div>
+    </div>
+    <div class="phase-body">
+      <!-- Block C -->
+      <div class="block">
+        <span class="block-tag">BLOCK C</span>
+        <h3>查询方发送查询请求</h3>
+        <p>查询方（公众或监管主体）发送包含特定无人机 <code>DET</code> 的查询请求，请求到达<strong style="color:var(--accent-blue)">统一网关</strong>。</p>
+        <div class="highlight-box">
+          <strong>查询方类型：</strong>公众用户 (Public) ｜ 监管/应急主体 (Regulatory)
+        </div>
+      </div>
+      <!-- Block D -->
+      <div class="block">
+        <span class="block-tag">BLOCK D</span>
+        <h3>统一网关（路由器/解析器）</h3>
+        <ul>
+          <li><strong style="color:var(--text)">解析标识位段：</strong>从 DET 中提取 RAA 和 HDA 前缀</li>
+          <li><strong style="color:var(--text)">执行路由匹配：</strong>基于 HDA 前缀（如 <code>00B2</code>）确定管理节点</li>
+          <li><strong style="color:var(--text)">无需全表扫描：</strong>直接前缀定位，高效路由</li>
+        </ul>
+        <div class="det-struct" style="margin-top:14px">
+          <div class="det-seg raa" style="flex:1">RAA ✓<span>提取</span></div>
+          <div class="det-seg hda" style="flex:1">HDA ✓<span>路由匹配键</span></div>
+          <div class="det-seg hash" style="flex:1; opacity:0.4">Hash<span>此阶段不使用</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-connector">
+    <svg width="24" height="32" viewBox="0 0 24 32"><path d="M12 0 L12 24 M4 18 L12 28 L20 18" stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <!-- ===== Phase 2 ===== -->
+  <div class="phase phase-2">
+    <div class="phase-header">
+      <div class="phase-num">2</div>
+      <div class="phase-label">分层路由（重定向请求）</div>
+      <div class="phase-sublabel">Hierarchical Routing</div>
+    </div>
+    <div class="phase-body">
+      <div class="block" style="flex: 1 1 100%;">
+        <span class="block-tag">DATA FLOW</span>
+        <h3>基于 HDA 前缀的直接路由</h3>
+        <p style="margin-bottom: 14px;">统一网关依据 HDA 前缀，将查询请求<strong style="color:var(--accent-orange)">无需全表扫描</strong>，直接路由/重定向到对应的管理节点。</p>
+        <div class="flow-strip">
+          <div class="flow-node" style="background:rgba(56,189,248,0.15); color:var(--accent-blue);">👤 查询方</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node" style="background:rgba(251,146,60,0.15); color:var(--accent-orange);">🌐 路由器 / 统一网关</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node" style="background:rgba(167,139,250,0.15); color:var(--accent-purple);">🏛 RAA 节点</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node" style="background:rgba(74,222,128,0.15); color:var(--accent-green);">📡 HDA2 管理服务器</div>
+        </div>
+        <div class="highlight-box" style="margin-top:14px;">
+          <strong>路由逻辑：</strong>Gateway 解析 DET → 提取 RAA & HDA 段 → 依据 HDA 前缀（如 <code>00B2</code>）重定向 → 目标管理节点（HDA2），全程无需全表扫描。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-connector">
+    <svg width="24" height="32" viewBox="0 0 24 32"><path d="M12 0 L12 24 M4 18 L12 28 L20 18" stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <!-- ===== Phase 3 ===== -->
+  <div class="phase phase-3">
+    <div class="phase-header">
+      <div class="phase-num">3</div>
+      <div class="phase-label">管理节点：数据提取与视图切片</div>
+      <div class="phase-sublabel">View Slicing & Access Control</div>
+    </div>
+    <div class="phase-body" style="flex-direction: column; gap: 14px;">
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <!-- Block E -->
+        <div class="block">
+          <span class="block-tag">BLOCK E</span>
+          <h3>HDA 管理服务器接收查询</h3>
+          <p>HDA2 管理服务器接收查询，查找无人机的<strong style="color:var(--accent-green)">全量数据</strong>：</p>
+          <ul>
+            <li>精确位置信息</li>
+            <li>运行状态数据</li>
+            <li>所有人身份信息</li>
+            <li>授权与证书信息</li>
+          </ul>
+        </div>
+        <!-- Block F -->
+        <div class="block">
+          <span class="block-tag">BLOCK F</span>
+          <h3>差异化授权与视图切片</h3>
+          <p>在数据返回前，HDA 执行<strong style="color:var(--accent-green)">视图切片</strong>：</p>
+          <ul>
+            <li>应用治理层权限策略</li>
+            <li>识别调用者角色（公众 / 监管）</li>
+            <li>遵循<strong style="color:var(--accent-yellow)">最小公开原则</strong></li>
+            <li>按角色过滤返回数据字段</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Scenarios -->
+      <div class="block" style="padding-bottom:24px;">
+        <span class="block-tag">SCENARIOS</span>
+        <h3 style="margin-bottom:4px;">基于调用者角色的差异化数据返回</h3>
+        <div class="scenarios">
+          <div class="scenario public">
+            <h4><span class="badge">场景 A</span> 调用者 = 公众 (Public)</h4>
+            <p style="font-size:12px; color:var(--accent-blue); font-weight:600; margin-bottom:6px;">最小公开视图</p>
+            <ul>
+              <li>✅ 运行识别标识 (DET)</li>
+              <li>✅ 证书信息</li>
+              <li>✅ 哈希指纹</li>
+              <li>✅ 有效期</li>
+              <li>✅ 最小基础状态</li>
+              <li style="color:var(--accent-red);">❌ 个人数据</li>
+              <li style="color:var(--accent-red);">❌ 精确控制站位置</li>
+            </ul>
+          </div>
+          <div class="scenario regulatory">
+            <h4><span class="badge">场景 B</span> 调用者 = 监管/应急 (Regulatory)</h4>
+            <p style="font-size:12px; color:var(--accent-red); font-weight:600; margin-bottom:6px;">受控扩展视图</p>
+            <ul>
+              <li>✅ 全部公众可见字段</li>
+              <li>✅ 实时精确位置</li>
+              <li>✅ 所有人身份证号</li>
+              <li>✅ 授权依据</li>
+              <li>✅ 状态信息</li>
+              <li>✅ 辅助证据</li>
+              <li style="font-size:11px; color:var(--accent-yellow); margin-top:4px;">⚠ 需授权查询凭证</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-connector">
+    <svg width="24" height="32" viewBox="0 0 24 32"><path d="M12 0 L12 24 M4 18 L12 28 L20 18" stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <!-- ===== Phase 4 ===== -->
+  <div class="phase phase-4">
+    <div class="phase-header">
+      <div class="phase-num">4</div>
+      <div class="phase-label">数据返回</div>
+      <div class="phase-sublabel">Response Delivery</div>
+    </div>
+    <div class="phase-body">
+      <div class="block" style="flex: 1 1 100%;">
+        <span class="block-tag">RETURN FLOW</span>
+        <h3>过滤后的数据返回查询方</h3>
+        <p style="margin-bottom:14px;">经视图切片过滤后的数据，沿原路径反向返回至查询方。</p>
+        <div class="flow-strip">
+          <div class="flow-node" style="background:rgba(74,222,128,0.15); color:var(--accent-green);">📡 HDA2 管理服务器</div>
+          <div class="flow-arrow" style="color:var(--accent-pink);">→</div>
+          <div class="flow-node" style="background:rgba(251,146,60,0.15); color:var(--accent-orange);">🌐 路由器 / 统一网关</div>
+          <div class="flow-arrow" style="color:var(--accent-pink);">→</div>
+          <div class="flow-node" style="background:rgba(56,189,248,0.15); color:var(--accent-blue);">👤 查询方</div>
+        </div>
+        <div style="display:flex; gap:14px; margin-top:14px; flex-wrap:wrap;">
+          <div class="highlight-box" style="flex:1; min-width:200px; border-left-color:var(--accent-blue);">
+            <strong style="color:var(--accent-blue);">公众查询方：</strong>收到最小公开视图数据（脱敏）
+          </div>
+          <div class="highlight-box" style="flex:1; min-width:200px; border-left-color:var(--accent-red);">
+            <strong style="color:var(--accent-red);">监管查询方：</strong>收到受控扩展视图数据（含敏感字段）
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <h4>图例 Legend</h4>
+    <div class="legend-items">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-purple)"></div>阶段 0 — 身份准备</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue)"></div>阶段 1 — 查询发起</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-orange)"></div>阶段 2 — 分层路由</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-green)"></div>阶段 3 — 数据提取与切片</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-pink)"></div>阶段 4 — 数据返回</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue); opacity:0.5"></div>公众视图</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent-red); opacity:0.5"></div>监管视图</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

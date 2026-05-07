@@ -1,0 +1,35 @@
+default_provider: proxy
+
+providers:
+  openai:
+    provider: openai
+    base_url: null
+    api_key_env: OPENAI_API_KEY
+    timeout: 120
+    max_tokens: 2000
+    max_retries: 2
+
+  deepseek:
+    provider: deepseek
+    base_url: https://api.deepseek.com
+    api_key_env: DEEPSEEK_API_KEY
+    timeout: 120
+    max_tokens: 2000
+    max_retries: 2
+
+  gemini:
+    provider: gemini
+    base_url: null
+    api_key_env: GEMINI_API_KEY
+    timeout: 120
+    max_tokens: 2000
+    max_retries: 2
+
+  proxy:
+    provider: proxy
+    base_url: https://yunwu.ai/v1
+    api_key_env: PROXY_API_KEY
+    model_name:   # 或 gpt-4o-mini, gemini-1.5-pro 等代理支持的模型
+    timeout: 120
+    max_tokens: 2000
+    max_retries: 2

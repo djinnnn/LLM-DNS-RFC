@@ -1,0 +1,56 @@
+# Heuristic dispatch table for stage 0 contract assembly.
+#
+# Loaded by inference.py. A miss returns the default value AND emits a
+# `[Stage0/inference] ...` warning to stderr (stage_0_redesign.md §4 C1-y).
+# Every list-shaped condition is normalized to a list, even single values.
+
+# rule.name → event_pattern  (default: "unknown_event")
+event_patterns:
+  - if_name_contains_any: ["recv"]
+    sub_dispatch:
+      - if_name_contains_any: ["query"]
+        pattern: "recv query(...)"
+      - if_name_contains_any: ["response", "ans"]
+        pattern: "recv response(...)"
+      - if_name_contains_any: ["referral"]
+        pattern: "recv referral(...)"
+  - if_name_contains_any: ["start"]
+    pattern: "init"
+  - if_name_contains_any: ["timeout"]
+    pattern: "timeout"
+
+# rule.rhs → action slots (zero or more)
+action_slots:
+  - if_rhs_contains_any: ["cache"]
+    slot_type: "cache_operation"
+    description: "Update cache with new records"
+    suffix: "-cache-update"
+  - if_rhs_contains_any: ["send", "msg"]
+    slot_type: "send_message"
+    description: "Send message to another actor"
+    suffix: "-send-msg"
+
+# Substring keywords on the attribute label that elevate access mode to
+# read-write. (default mode is "read".)
+state_access:
+  write_keywords: ["cache", "queue", "budget", "queries", "blocked", "sent"]
+
+# rule.name → message direction tags (used by tagging system)
+rule_tags:
+  msg_pattern:
+    - if_name_contains_any: ["query"]
+      value: "query"
+    - if_name_contains_any: ["response", "ans"]
+      value: "response"
+  behavior:
+    - if_name_contains_any: ["recv"]
+      value: "receive"
+    - if_name_contains_any: ["send", "reply"]
+      value: "send"
+
+# Sort name → tagging category (legacy parity)
+sort_categories:
+  message: ["Msg", "Query", "Response"]
+  cache: ["Cache"]
+  dns_record: ["Record"]
+  identifier: ["Address", "Name"]

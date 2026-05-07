@@ -1,0 +1,57 @@
+{
+  "seed": {
+    "node_type": "Section",
+    "section_id": "RFC9250_Sec4.1",
+    "rfc_id": "RFC9250",
+    "sec_num": "4.1",
+    "title": "Connection Establishment",
+    "text": "DoQ connections are established as described in the QUIC transport\nspecification . During connection establishment, DoQ support is\nindicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake.",
+    "is_appendix": false,
+    "is_reference_section": false,
+    "embedding_id": "RFC9250_Sec4.1",
+    "id": "RFC9250_Sec4.1"
+  },
+  "local_structure": {
+    "ancestors": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4",
+        "rfc_id": "RFC9250",
+        "sec_num": "4",
+        "title": "Specifications",
+        "is_appendix": false,
+        "is_reference_section": false,
+        "embedding_id": "RFC9250_Sec4"
+      }
+    ],
+    "descendants": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4.1.1",
+        "rfc_id": "RFC9250",
+        "sec_num": "4.1.1",
+        "title": "Port Selection",
+        "text": "By default, a DNS server that supports DoQ MUST listen for and accept QUIC\nconnections on the dedicated UDP port 853 (), unless there is a mutual agreement to\nuse another port.\n\nBy default, a DNS client desiring to use DoQ with a particular server MUST\nestablish a QUIC connection to UDP port 853 on the server, unless there is a\nmutual agreement to use another port.\n\nDoQ connections MUST NOT use UDP port 53. This recommendation against use of\nport 53 for DoQ is to avoid confusion between DoQ and the use of DNS over UDP\n. The risk of confusion exists even if two parties agreed on\nport 53, as other parties without knowledge of that agreement might still\ntry to use that port.\n\nIn the stub to recursive scenario, the use of port 443 as a mutually agreed\nalternative port can be operationally beneficial, since port 443 is \nused by many services using QUIC and HTTP-3 and is thus less likely\nto be blocked than other ports. Several mechanisms for stubs to discover\nrecursives offering encrypted transports, including the use of custom ports, are\nthe subject of ongoing work.",
+        "is_appendix": false,
+        "is_reference_section": false,
+        "embedding_id": "RFC9250_Sec4.1.1"
+      }
+    ]
+  },
+  "references": {
+    "normative": {
+      "section_level": [],
+      "document_level": []
+    },
+    "informative": {
+      "section_level": [],
+      "document_level": []
+    }
+  },
+  "semantic_expansion": [],
+  "trace": [
+    "[Seed] 锚定节点: RFC9250_Sec4.1",
+    "[Local] 获取到 1 个父级作用域, 1 个直接子节点",
+    "[Refs] 归一化后引用数: 0"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "semantic_rules": [
+    {
+      "id": "string",
+      "modality": "MUST | SHOULD | MAY | MUST_NOT | UNSPECIFIED | UNKNOWN",
+      "actor": {
+        "name": "string",
+        "type": "role | component | endpoint | unknown"
+      },
+      "event": {
+        "kind": "recv | send | timeout | internal | state_trigger | unknown",
+        "expr": "string"
+      },
+      "conditions": [
+        {
+          "kind": "guard | state_check | predicate | unknown",
+          "expr": "string"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "send | state_update | drop | ignore | reply | error | transition | unknown",
+          "expr": "string"
+        }
+      ],
+      "provenance": {
+        "document": "string",
+        "section": "string",
+        "anchor": "string",
+        "source_text": "string"
+      }
+    }
+  ]
+}

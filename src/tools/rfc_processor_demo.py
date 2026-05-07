@@ -7,6 +7,7 @@ from orchestrator import RFCGraphOrchestrator
 from graph_knowledge_base import GraphKnowledgeBase
 from rag_router import GraphRAGRouter, SemanticRanker, SentenceTransformerQueryBackend
 from embedding_store import NumpyEmbeddingStore 
+from visualize import visualize_graph
 
 # def main():
 #     # ==========================================
@@ -86,11 +87,11 @@ from embedding_store import NumpyEmbeddingStore
 #     # print(response)
 
 def main():
-    target_rfc_doc = "7858"
-    test_depth = 1
-    seed_node = "RFC7858_Sec3.1"
+    target_rfc_doc = "9250"
+    test_depth = 999  # 不限深度，递归遍历所有引用 RFC
+    seed_node = "RFC9250_Sec4.1"
 
-    save_dir = "../../RFCs_Test/"
+    save_dir = "../../RFC_9250/"
     vector_dir = os.path.join(save_dir, "vector_store")
     npy_path = os.path.join(vector_dir, "section_embeddings.npy")
     index_path = os.path.join(vector_dir, "section_embedding_index.json")
@@ -116,6 +117,8 @@ def main():
         vector_dir=vector_dir
     )
     global_graph = orchestrator.fetch_and_build(target_rfc_doc)
+    visualize_graph(global_graph, target_rfc_doc, test_depth, output_dir="../../RFCs_Test/")
+
 
     print("\n=== [Phase 1.1] 全局图与向量存储检查 ===")
     print(f"图节点总数: {global_graph.number_of_nodes()}")
@@ -171,8 +174,6 @@ def main():
     print(f"\n=== [Phase 2] 执行 Graph RAG 路由 ===")
     kb = GraphKnowledgeBase(global_graph)
 
-    # 这里假设你已经把新 ranker 接好了
-    # 你可以按自己的实现替换这段初始化
     query_backend = SentenceTransformerQueryBackend("BAAI/bge-large-en-v1.5")
     embedding_store = NumpyEmbeddingStore(
         npy_path=npy_path,
@@ -326,7 +327,7 @@ def main():
 
     print("\n[完整 ContextPack Schema 输出 - 截断版]")
     preview_pack = truncate_text_fields(deepcopy(context_pack), max_len=200)
-    print(json.dumps(preview_pack, indent=2, ensure_ascii=False))    
+    print(json.dumps(preview_pack, indent=2, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

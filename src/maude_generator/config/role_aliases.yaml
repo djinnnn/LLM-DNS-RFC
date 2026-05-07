@@ -1,0 +1,28 @@
+# LLM role 名别名 → Maude ActorType
+# 只包含 maude_contract.json 中已有的 4 个 ActorType
+# 匹配时忽略大小写
+
+Resolver:
+  - "resolver"
+  - "dns resolver"
+  - "recursive resolver"
+  - "recursive server"
+  - "caching resolver"
+
+Nameserver:
+  - "nameserver"
+  - "name server"
+  - "dns server"
+  - "server"
+  - "authoritative server"
+  - "authoritative nameserver"
+  - "authoritative name server"
+
+Client:
+  - "client"
+  - "dns client"
+  - "stub resolver"
+  - "stub"
+
+Monitor:
+  - "monitor"

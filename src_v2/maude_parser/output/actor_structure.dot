@@ -1,0 +1,10 @@
+digraph ActorStructure {
+  rankdir=LR;  // Left to Right
+  node [shape=none, fontname="Helvetica"];
+
+  "Client" [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#E8F4F8"><TR><TD BGCOLOR="#1976D2" COLSPAN="2"><FONT COLOR="white"><B>Client</B></FONT></TD></TR><TR><TD>queries</TD><TD>List{Query}</TD></TR><TR><TD>resolver</TD><TD>Address</TD></TR><TR><TD>notifyDone</TD><TD>Address</TD></TR></TABLE>>];
+  "Monitor" [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#E8F4F8"><TR><TD BGCOLOR="#1976D2" COLSPAN="2"><FONT COLOR="white"><B>Monitor</B></FONT></TD></TR><TR><TD>msgsSent</TD><TD>IdAddrFloatMap</TD></TR><TR><TD>totalSent</TD><TD>AddrFloatMap</TD></TR><TR><TD>clientQSent</TD><TD>Nat</TD></TR><TR><TD>clQueryLog</TD><TD>TupleAddrQueryList</TD></TR><TR><TD>msgsRcv</TD><TD>IdAddrFloatMap</TD></TR><TR><TD>totalRcv</TD><TD>AddrFloatMap</TD></TR><TR><TD>rsvRewriteLog</TD><TD>TupleNameRecsList</TD></TR><TR><TD>rsvSlistLog</TD><TD>TupleSlistArgsList</TD></TR><TR><TD>nsQueryLog</TD><TD>TupleAddrQueryList</TD></TR><TR><TD>nsRespLog</TD><TD>TupleAddrRespList</TD></TR><TR><TD COLSPAN="2">... (3 more)</TD></TR></TABLE>>];
+  "Nameserver" [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#E8F4F8"><TR><TD BGCOLOR="#1976D2" COLSPAN="2"><FONT COLOR="white"><B>Nameserver</B></FONT></TD></TR><TR><TD>db</TD><TD>List{Record}</TD></TR></TABLE>>];
+  "Resolver" [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#E8F4F8"><TR><TD BGCOLOR="#1976D2" COLSPAN="2"><FONT COLOR="white"><B>Resolver</B></FONT></TD></TR><TR><TD>cache</TD><TD>Cache</TD></TR><TR><TD>nxdomainCache</TD><TD>NxdomainCache</TD></TR><TR><TD>nodataCache</TD><TD>NodataCache</TD></TR><TR><TD>sbelt</TD><TD>ZoneState</TD></TR><TR><TD>workBudget</TD><TD>IdNatMap</TD></TR><TR><TD>blockedQueries</TD><TD>QueryStateSet</TD></TR><TR><TD>sentQueries</TD><TD>QueryStateSet</TD></TR></TABLE>>];
+
+}

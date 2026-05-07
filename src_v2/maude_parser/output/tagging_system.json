@@ -1,0 +1,1329 @@
+{
+  "metadata": {
+    "description": "Maude DNS Model Tagging System",
+    "version": "1.0",
+    "total_entities": 90
+  },
+  "entity_tags": {
+    "LABEL-GRAPH:pick-name": {
+      "entity_id": "LABEL-GRAPH:pick-name",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "LABEL-GRAPH:pick-type-a": {
+      "entity_id": "LABEL-GRAPH:pick-type-a",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "LABEL-GRAPH:pick-type-ns": {
+      "entity_id": "LABEL-GRAPH:pick-type-ns",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Nameserver",
+        "complexity": "simple"
+      }
+    },
+    "LABEL-GRAPH:pick-type-soa": {
+      "entity_id": "LABEL-GRAPH:pick-type-soa",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "LABEL-GRAPH:pick-type-cname": {
+      "entity_id": "LABEL-GRAPH:pick-type-cname",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "LABEL-GRAPH:pick-type-txt": {
+      "entity_id": "LABEL-GRAPH:pick-type-txt",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "AUX:pick-addr": {
+      "entity_id": "AUX:pick-addr",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "AUX:pick-addr-null": {
+      "entity_id": "AUX:pick-addr-null",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Unknown",
+        "complexity": "simple"
+      }
+    },
+    "DNS:client-start": {
+      "entity_id": "DNS:client-start",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Client",
+        "complexity": "simple"
+      }
+    },
+    "DNS:resolver-reply-local": {
+      "entity_id": "DNS:resolver-reply-local",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "send",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-query": {
+      "entity_id": "DNS:resolver-recv-query",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "query",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:nameserver-recv-query-unbounded": {
+      "entity_id": "DNS:nameserver-recv-query-unbounded",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Nameserver",
+        "msg_pattern": "query",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-ans-for-client": {
+      "entity_id": "DNS:resolver-recv-ans-for-client",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-ans-for-resolver": {
+      "entity_id": "DNS:resolver-recv-ans-for-resolver",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-cname-reply-for-client-answered": {
+      "entity_id": "DNS:resolver-recv-cname-reply-for-client-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-cname-reply-for-resolver-answered": {
+      "entity_id": "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-cname-reply-not-answered": {
+      "entity_id": "DNS:resolver-recv-cname-reply-not-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-dname-reply-for-client-answered": {
+      "entity_id": "DNS:resolver-recv-dname-reply-for-client-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-dname-reply-for-resolver-answered": {
+      "entity_id": "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-dname-reply-not-answered": {
+      "entity_id": "DNS:resolver-recv-dname-reply-not-answered",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "msg_pattern": "response",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-referral-reply": {
+      "entity_id": "DNS:resolver-recv-referral-reply",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-qmin-noerror-reply": {
+      "entity_id": "DNS:resolver-recv-qmin-noerror-reply",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-bad-referral-reply-for-client": {
+      "entity_id": "DNS:resolver-recv-bad-referral-reply-for-client",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-bad-referral-reply-for-resolver": {
+      "entity_id": "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-refused-reply-for-client": {
+      "entity_id": "DNS:resolver-recv-refused-reply-for-client",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:resolver-recv-refused-reply-for-resolver": {
+      "entity_id": "DNS:resolver-recv-refused-reply-for-resolver",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Resolver",
+        "behavior": "receive",
+        "complexity": "conditional"
+      }
+    },
+    "DNS:client-recv-resp-send-next": {
+      "entity_id": "DNS:client-recv-resp-send-next",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Client",
+        "behavior": "receive",
+        "complexity": "simple"
+      }
+    },
+    "DNS:client-recv-resp-done": {
+      "entity_id": "DNS:client-recv-resp-done",
+      "entity_type": "rule",
+      "tags": {
+        "entity_type": "rule",
+        "actor": "Client",
+        "behavior": "receive",
+        "complexity": "simple"
+      }
+    },
+    "Resolver": {
+      "entity_id": "Resolver",
+      "entity_type": "actor",
+      "tags": {
+        "entity_type": "actor",
+        "role": "Resolver",
+        "has_state": true
+      }
+    },
+    "Nameserver": {
+      "entity_id": "Nameserver",
+      "entity_type": "actor",
+      "tags": {
+        "entity_type": "actor",
+        "role": "Nameserver",
+        "has_state": true
+      }
+    },
+    "Client": {
+      "entity_id": "Client",
+      "entity_type": "actor",
+      "tags": {
+        "entity_type": "actor",
+        "role": "Client",
+        "has_state": true
+      }
+    },
+    "Monitor": {
+      "entity_id": "Monitor",
+      "entity_type": "actor",
+      "tags": {
+        "entity_type": "actor",
+        "role": "Monitor",
+        "has_state": true
+      }
+    },
+    "Address": {
+      "entity_id": "Address",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ADDRESS",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "AddrSet": {
+      "entity_id": "AddrSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ADDRESS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "AddrList": {
+      "entity_id": "AddrList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ADDRESS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Actor": {
+      "entity_id": "Actor",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Config": {
+      "entity_id": "Config",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "ActorConfig": {
+      "entity_id": "ActorConfig",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "PairConfig": {
+      "entity_id": "PairConfig",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Msg": {
+      "entity_id": "Msg",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "ActorType": {
+      "entity_id": "ActorType",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Attribute": {
+      "entity_id": "Attribute",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "AttributeSet": {
+      "entity_id": "AttributeSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Content": {
+      "entity_id": "Content",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "ACTOR-MODEL",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "LabelTree": {
+      "entity_id": "LabelTree",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "LABEL-GRAPH",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "LabelForest": {
+      "entity_id": "LabelForest",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "LABEL-GRAPH",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Name": {
+      "entity_id": "Name",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "NameList": {
+      "entity_id": "NameList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "NameSet": {
+      "entity_id": "NameSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "RType": {
+      "entity_id": "RType",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "RData": {
+      "entity_id": "RData",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Record": {
+      "entity_id": "Record",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "dns-record"
+      }
+    },
+    "CacheEntry": {
+      "entity_id": "CacheEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "cache"
+      }
+    },
+    "Cache": {
+      "entity_id": "Cache",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "cache"
+      }
+    },
+    "NxdomainEntry": {
+      "entity_id": "NxdomainEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "NxdomainCache": {
+      "entity_id": "NxdomainCache",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "cache"
+      }
+    },
+    "NodataEntry": {
+      "entity_id": "NodataEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "NodataCache": {
+      "entity_id": "NodataCache",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "cache"
+      }
+    },
+    "Query": {
+      "entity_id": "Query",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "ZoneState": {
+      "entity_id": "ZoneState",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "SORTS-AUX",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Id": {
+      "entity_id": "Id",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MSG",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdList": {
+      "entity_id": "IdList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MSG",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Response": {
+      "entity_id": "Response",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MSG",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "QueryState": {
+      "entity_id": "QueryState",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "QueryStateSet": {
+      "entity_id": "QueryStateSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "QMinState": {
+      "entity_id": "QMinState",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "PairQueryStateSet": {
+      "entity_id": "PairQueryStateSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "IdNatEntry": {
+      "entity_id": "IdNatEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdNatMap": {
+      "entity_id": "IdNatMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleQSSQSSIdNatMap": {
+      "entity_id": "TupleQSSQSSIdNatMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "QueueEntry": {
+      "entity_id": "QueueEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "Queue": {
+      "entity_id": "Queue",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "NODE",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "AddrFloatEntry": {
+      "entity_id": "AddrFloatEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "AddrFloatMap": {
+      "entity_id": "AddrFloatMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdFloatEntry": {
+      "entity_id": "IdFloatEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdFloatMap": {
+      "entity_id": "IdFloatMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdAddrFloatEntry": {
+      "entity_id": "IdAddrFloatEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdAddrFloatMap": {
+      "entity_id": "IdAddrFloatMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdAddrListEntry": {
+      "entity_id": "IdAddrListEntry",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "IdAddrListMap": {
+      "entity_id": "IdAddrListMap",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleAddrQuery": {
+      "entity_id": "TupleAddrQuery",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "TupleAddrQueryList": {
+      "entity_id": "TupleAddrQueryList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "message"
+      }
+    },
+    "TupleAddrResp": {
+      "entity_id": "TupleAddrResp",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleAddrRespList": {
+      "entity_id": "TupleAddrRespList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleAddrRecs": {
+      "entity_id": "TupleAddrRecs",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleAddrRecsSet": {
+      "entity_id": "TupleAddrRecsSet",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleNameRecs": {
+      "entity_id": "TupleNameRecs",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "TupleNameRecsList": {
+      "entity_id": "TupleNameRecsList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "identifier"
+      }
+    },
+    "TupleSlistArgs": {
+      "entity_id": "TupleSlistArgs",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    },
+    "TupleSlistArgsList": {
+      "entity_id": "TupleSlistArgsList",
+      "entity_type": "sort",
+      "tags": {
+        "entity_type": "sort",
+        "defined_in": "MONITOR",
+        "is_actor_type": false,
+        "category": "other"
+      }
+    }
+  },
+  "tag_index": {
+    "entity_type:rule": [
+      "LABEL-GRAPH:pick-name",
+      "LABEL-GRAPH:pick-type-a",
+      "LABEL-GRAPH:pick-type-ns",
+      "LABEL-GRAPH:pick-type-soa",
+      "LABEL-GRAPH:pick-type-cname",
+      "LABEL-GRAPH:pick-type-txt",
+      "AUX:pick-addr",
+      "AUX:pick-addr-null",
+      "DNS:client-start",
+      "DNS:resolver-reply-local",
+      "DNS:resolver-recv-query",
+      "DNS:nameserver-recv-query-unbounded",
+      "DNS:resolver-recv-ans-for-client",
+      "DNS:resolver-recv-ans-for-resolver",
+      "DNS:resolver-recv-cname-reply-for-client-answered",
+      "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "DNS:resolver-recv-cname-reply-not-answered",
+      "DNS:resolver-recv-dname-reply-for-client-answered",
+      "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "DNS:resolver-recv-dname-reply-not-answered",
+      "DNS:resolver-recv-referral-reply",
+      "DNS:resolver-recv-qmin-noerror-reply",
+      "DNS:resolver-recv-bad-referral-reply-for-client",
+      "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "DNS:resolver-recv-refused-reply-for-client",
+      "DNS:resolver-recv-refused-reply-for-resolver",
+      "DNS:client-recv-resp-send-next",
+      "DNS:client-recv-resp-done"
+    ],
+    "actor:Unknown": [
+      "LABEL-GRAPH:pick-name",
+      "LABEL-GRAPH:pick-type-a",
+      "LABEL-GRAPH:pick-type-soa",
+      "LABEL-GRAPH:pick-type-cname",
+      "LABEL-GRAPH:pick-type-txt",
+      "AUX:pick-addr",
+      "AUX:pick-addr-null"
+    ],
+    "complexity:simple": [
+      "LABEL-GRAPH:pick-name",
+      "LABEL-GRAPH:pick-type-a",
+      "LABEL-GRAPH:pick-type-ns",
+      "LABEL-GRAPH:pick-type-soa",
+      "LABEL-GRAPH:pick-type-cname",
+      "LABEL-GRAPH:pick-type-txt",
+      "AUX:pick-addr",
+      "AUX:pick-addr-null",
+      "DNS:client-start",
+      "DNS:client-recv-resp-send-next",
+      "DNS:client-recv-resp-done"
+    ],
+    "actor:Nameserver": [
+      "LABEL-GRAPH:pick-type-ns",
+      "DNS:nameserver-recv-query-unbounded"
+    ],
+    "actor:Client": [
+      "DNS:client-start",
+      "DNS:client-recv-resp-send-next",
+      "DNS:client-recv-resp-done"
+    ],
+    "actor:Resolver": [
+      "DNS:resolver-reply-local",
+      "DNS:resolver-recv-query",
+      "DNS:resolver-recv-ans-for-client",
+      "DNS:resolver-recv-ans-for-resolver",
+      "DNS:resolver-recv-cname-reply-for-client-answered",
+      "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "DNS:resolver-recv-cname-reply-not-answered",
+      "DNS:resolver-recv-dname-reply-for-client-answered",
+      "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "DNS:resolver-recv-dname-reply-not-answered",
+      "DNS:resolver-recv-referral-reply",
+      "DNS:resolver-recv-qmin-noerror-reply",
+      "DNS:resolver-recv-bad-referral-reply-for-client",
+      "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "DNS:resolver-recv-refused-reply-for-client",
+      "DNS:resolver-recv-refused-reply-for-resolver"
+    ],
+    "behavior:send": [
+      "DNS:resolver-reply-local"
+    ],
+    "complexity:conditional": [
+      "DNS:resolver-reply-local",
+      "DNS:resolver-recv-query",
+      "DNS:nameserver-recv-query-unbounded",
+      "DNS:resolver-recv-ans-for-client",
+      "DNS:resolver-recv-ans-for-resolver",
+      "DNS:resolver-recv-cname-reply-for-client-answered",
+      "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "DNS:resolver-recv-cname-reply-not-answered",
+      "DNS:resolver-recv-dname-reply-for-client-answered",
+      "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "DNS:resolver-recv-dname-reply-not-answered",
+      "DNS:resolver-recv-referral-reply",
+      "DNS:resolver-recv-qmin-noerror-reply",
+      "DNS:resolver-recv-bad-referral-reply-for-client",
+      "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "DNS:resolver-recv-refused-reply-for-client",
+      "DNS:resolver-recv-refused-reply-for-resolver"
+    ],
+    "msg_pattern:query": [
+      "DNS:resolver-recv-query",
+      "DNS:nameserver-recv-query-unbounded"
+    ],
+    "behavior:receive": [
+      "DNS:resolver-recv-query",
+      "DNS:nameserver-recv-query-unbounded",
+      "DNS:resolver-recv-ans-for-client",
+      "DNS:resolver-recv-ans-for-resolver",
+      "DNS:resolver-recv-cname-reply-for-client-answered",
+      "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "DNS:resolver-recv-cname-reply-not-answered",
+      "DNS:resolver-recv-dname-reply-for-client-answered",
+      "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "DNS:resolver-recv-dname-reply-not-answered",
+      "DNS:resolver-recv-referral-reply",
+      "DNS:resolver-recv-qmin-noerror-reply",
+      "DNS:resolver-recv-bad-referral-reply-for-client",
+      "DNS:resolver-recv-bad-referral-reply-for-resolver",
+      "DNS:resolver-recv-refused-reply-for-client",
+      "DNS:resolver-recv-refused-reply-for-resolver",
+      "DNS:client-recv-resp-send-next",
+      "DNS:client-recv-resp-done"
+    ],
+    "msg_pattern:response": [
+      "DNS:resolver-recv-ans-for-client",
+      "DNS:resolver-recv-ans-for-resolver",
+      "DNS:resolver-recv-cname-reply-for-client-answered",
+      "DNS:resolver-recv-cname-reply-for-resolver-answered",
+      "DNS:resolver-recv-cname-reply-not-answered",
+      "DNS:resolver-recv-dname-reply-for-client-answered",
+      "DNS:resolver-recv-dname-reply-for-resolver-answered",
+      "DNS:resolver-recv-dname-reply-not-answered"
+    ],
+    "entity_type:actor": [
+      "Resolver",
+      "Nameserver",
+      "Client",
+      "Monitor"
+    ],
+    "role:Resolver": [
+      "Resolver"
+    ],
+    "has_state:True": [
+      "Resolver",
+      "Nameserver",
+      "Client",
+      "Monitor"
+    ],
+    "role:Nameserver": [
+      "Nameserver"
+    ],
+    "role:Client": [
+      "Client"
+    ],
+    "role:Monitor": [
+      "Monitor"
+    ],
+    "entity_type:sort": [
+      "Address",
+      "AddrSet",
+      "AddrList",
+      "Actor",
+      "Config",
+      "ActorConfig",
+      "PairConfig",
+      "Msg",
+      "ActorType",
+      "Attribute",
+      "AttributeSet",
+      "Content",
+      "LabelTree",
+      "LabelForest",
+      "Name",
+      "NameList",
+      "NameSet",
+      "RType",
+      "RData",
+      "Record",
+      "CacheEntry",
+      "Cache",
+      "NxdomainEntry",
+      "NxdomainCache",
+      "NodataEntry",
+      "NodataCache",
+      "Query",
+      "ZoneState",
+      "Id",
+      "IdList",
+      "Response",
+      "QueryState",
+      "QueryStateSet",
+      "QMinState",
+      "PairQueryStateSet",
+      "IdNatEntry",
+      "IdNatMap",
+      "TupleQSSQSSIdNatMap",
+      "QueueEntry",
+      "Queue",
+      "AddrFloatEntry",
+      "AddrFloatMap",
+      "IdFloatEntry",
+      "IdFloatMap",
+      "IdAddrFloatEntry",
+      "IdAddrFloatMap",
+      "IdAddrListEntry",
+      "IdAddrListMap",
+      "TupleAddrQuery",
+      "TupleAddrQueryList",
+      "TupleAddrResp",
+      "TupleAddrRespList",
+      "TupleAddrRecs",
+      "TupleAddrRecsSet",
+      "TupleNameRecs",
+      "TupleNameRecsList",
+      "TupleSlistArgs",
+      "TupleSlistArgsList"
+    ],
+    "defined_in:ADDRESS": [
+      "Address",
+      "AddrSet",
+      "AddrList"
+    ],
+    "is_actor_type:False": [
+      "Address",
+      "AddrSet",
+      "AddrList",
+      "Actor",
+      "Config",
+      "ActorConfig",
+      "PairConfig",
+      "Msg",
+      "ActorType",
+      "Attribute",
+      "AttributeSet",
+      "Content",
+      "LabelTree",
+      "LabelForest",
+      "Name",
+      "NameList",
+      "NameSet",
+      "RType",
+      "RData",
+      "Record",
+      "CacheEntry",
+      "Cache",
+      "NxdomainEntry",
+      "NxdomainCache",
+      "NodataEntry",
+      "NodataCache",
+      "Query",
+      "ZoneState",
+      "Id",
+      "IdList",
+      "Response",
+      "QueryState",
+      "QueryStateSet",
+      "QMinState",
+      "PairQueryStateSet",
+      "IdNatEntry",
+      "IdNatMap",
+      "TupleQSSQSSIdNatMap",
+      "QueueEntry",
+      "Queue",
+      "AddrFloatEntry",
+      "AddrFloatMap",
+      "IdFloatEntry",
+      "IdFloatMap",
+      "IdAddrFloatEntry",
+      "IdAddrFloatMap",
+      "IdAddrListEntry",
+      "IdAddrListMap",
+      "TupleAddrQuery",
+      "TupleAddrQueryList",
+      "TupleAddrResp",
+      "TupleAddrRespList",
+      "TupleAddrRecs",
+      "TupleAddrRecsSet",
+      "TupleNameRecs",
+      "TupleNameRecsList",
+      "TupleSlistArgs",
+      "TupleSlistArgsList"
+    ],
+    "category:identifier": [
+      "Address",
+      "Name",
+      "NameList",
+      "NameSet",
+      "TupleNameRecs",
+      "TupleNameRecsList"
+    ],
+    "category:other": [
+      "AddrSet",
+      "AddrList",
+      "Actor",
+      "Config",
+      "ActorConfig",
+      "PairConfig",
+      "ActorType",
+      "Attribute",
+      "AttributeSet",
+      "Content",
+      "LabelTree",
+      "LabelForest",
+      "RType",
+      "RData",
+      "NxdomainEntry",
+      "NodataEntry",
+      "ZoneState",
+      "Id",
+      "IdList",
+      "QMinState",
+      "IdNatEntry",
+      "IdNatMap",
+      "TupleQSSQSSIdNatMap",
+      "QueueEntry",
+      "Queue",
+      "AddrFloatEntry",
+      "AddrFloatMap",
+      "IdFloatEntry",
+      "IdFloatMap",
+      "IdAddrFloatEntry",
+      "IdAddrFloatMap",
+      "IdAddrListEntry",
+      "IdAddrListMap",
+      "TupleAddrResp",
+      "TupleAddrRespList",
+      "TupleAddrRecs",
+      "TupleAddrRecsSet",
+      "TupleSlistArgs",
+      "TupleSlistArgsList"
+    ],
+    "defined_in:ACTOR-MODEL": [
+      "Actor",
+      "Config",
+      "ActorConfig",
+      "PairConfig",
+      "Msg",
+      "ActorType",
+      "Attribute",
+      "AttributeSet",
+      "Content"
+    ],
+    "category:message": [
+      "Msg",
+      "Query",
+      "Response",
+      "QueryState",
+      "QueryStateSet",
+      "PairQueryStateSet",
+      "TupleAddrQuery",
+      "TupleAddrQueryList"
+    ],
+    "defined_in:LABEL-GRAPH": [
+      "LabelTree",
+      "LabelForest"
+    ],
+    "defined_in:SORTS": [
+      "Name",
+      "NameList",
+      "NameSet",
+      "RType",
+      "RData",
+      "Record",
+      "CacheEntry",
+      "Cache",
+      "NxdomainEntry",
+      "NxdomainCache",
+      "NodataEntry",
+      "NodataCache",
+      "Query"
+    ],
+    "category:dns-record": [
+      "Record"
+    ],
+    "category:cache": [
+      "CacheEntry",
+      "Cache",
+      "NxdomainCache",
+      "NodataCache"
+    ],
+    "defined_in:SORTS-AUX": [
+      "ZoneState"
+    ],
+    "defined_in:MSG": [
+      "Id",
+      "IdList",
+      "Response"
+    ],
+    "defined_in:NODE": [
+      "QueryState",
+      "QueryStateSet",
+      "QMinState",
+      "PairQueryStateSet",
+      "IdNatEntry",
+      "IdNatMap",
+      "TupleQSSQSSIdNatMap",
+      "QueueEntry",
+      "Queue"
+    ],
+    "defined_in:MONITOR": [
+      "AddrFloatEntry",
+      "AddrFloatMap",
+      "IdFloatEntry",
+      "IdFloatMap",
+      "IdAddrFloatEntry",
+      "IdAddrFloatMap",
+      "IdAddrListEntry",
+      "IdAddrListMap",
+      "TupleAddrQuery",
+      "TupleAddrQueryList",
+      "TupleAddrResp",
+      "TupleAddrRespList",
+      "TupleAddrRecs",
+      "TupleAddrRecsSet",
+      "TupleNameRecs",
+      "TupleNameRecsList",
+      "TupleSlistArgs",
+      "TupleSlistArgsList"
+    ]
+  }
+}

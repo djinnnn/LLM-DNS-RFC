@@ -1,0 +1,229 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 1 & 2: RFC 图谱构建 + ContextPack 组装                        ║
+╚════════════════════════════════════════════════════════════════╝
+  [Phase1] 从缓存加载图谱  nodes=57  edges=50
+  [Phase2] ContextPack 组装完成（使用缓存）
+  Seed: RFC9250_Sec4.1 "Connection Establishment" (240 chars)
+      → DoQ connections are established as described in the QUIC transport specification . During connection establishment, DoQ support is indicated by selecting the Application-Layer Protocol Negotiation (AL...
+  Local: 1 ancestors, 1 descendants
+      ↑ RFC9250_Sec4 "Specifications"
+      ↓ RFC9250_Sec4.1.1 "Port Selection" (1077 chars)
+  References: 0 normative-section, 0 normative-doc, 0 informative-section
+  Semantic expansion: 0 items
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 3: IR 抽取 (LLM)                                          ║
+╚════════════════════════════════════════════════════════════════╝
+  Input: section_text (240 chars)
+[DEBUG] IR cache MISS (key=e549c22f00ffc629)
+[DEBUG] ==================================================
+[DEBUG] IR Extraction: 完整 Prompt 内容
+[DEBUG]   system_prompt (203 chars)
+[DEBUG]   user_prompt (4671 chars)
+[DEBUG]   max_tokens: 8192
+[DEBUG] --- USER PROMPT START ---
+Please extract RFC behavior into the target IR JSON format.
+
+Target IR format:
+{
+  "semantic_rules": [
+    {
+      "id": "string (unique rule identifier, e.g. server-listen-port-853)",
+      "modality": "MUST | SHOULD | MAY | MUST_NOT | UNSPECIFIED | UNKNOWN",
+      "actor": {
+        "name": "string (e.g. DNS server, resolver, client)",
+        "type": "role | component | endpoint | unknown"
+      },
+      "event": {
+        "kind": "recv | send | timeout | internal | state_trigger | unknown",
+        "expr": "string (natural language description of the event)"
+      },
+      "conditions": [
+        {
+          "kind": "guard | state_check | predicate | unknown",
+          "expr": "string (natural language description of the condition)"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "send | state_update | drop | ignore | reply | error | transition | unknown",
+          "expr": "string (natural language description of the action)"
+        }
+      ],
+      "provenance": {
+        "document": "string (e.g. RFC7858)",
+        "section": "string (e.g. Section 3.1)",
+        "anchor": "string (key phrase from source text)",
+        "source_text": "string (verbatim RFC text snippet)"
+      }
+    }
+  ]
+}
+
+Source text:
+"""
+DoQ connections are established as described in the QUIC transport
+specification . During connection establishment, DoQ support is
+indicated by selecting the Application-Layer Protocol Negotiation (ALPN) token "doq" in the crypto handshake.
+"""
+
+Context pack:
+{
+  "seed": {
+    "node_type": "Section",
+    "section_id": "RFC9250_Sec4.1",
+    "rfc_id": "RFC9250",
+    "sec_num": "4.1",
+    "title": "Connection Establishment",
+    "text": "DoQ connections are established as described in the QUIC transport\nspecification . During connection establishment, DoQ support is\nindicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake.",
+    "is_appendix": false,
+    "is_reference_section": false,
+    "embedding_id": "RFC9250_Sec4.1",
+    "id": "RFC9250_Sec4.1"
+  },
+  "local_structure": {
+    "ancestors": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4",
+        "rfc_id": "RFC9250",
+        "sec_num": "4",
+        "title": "Specifications",
+        "is_appendix": false,
+        "is_reference_section": false,
+        "embedding_id": "RFC9250_Sec4"
+      }
+    ],
+    "descendants": [
+      {
+        "node_type": "Section",
+        "section_id": "RFC9250_Sec4.1.1",
+        "rfc_id": "RFC9250",
+        "sec_num": "4.1.1",
+        "title": "Port Selection",
+        "text": "By default, a DNS server that supports DoQ MUST listen for and accept QUIC\nconnections on the dedicated UDP port 853 (), unless there is a mutual agreement to\nuse another port.\n\nBy default, a DNS client desiring to use DoQ with a particular server MUST\nestablish a QUIC connection to UDP port 853 on the server, unless there is a\nmutual agreement to use another port.\n\nDoQ conne
+
+... [截断，剩余 1671 chars] ...
+[DEBUG] --- USER PROMPT END ---
+[DEBUG] ==================================================
+[DEBUG] IR cache SAVED (key=e549c22f00ffc629)
+  Result: success=True
+  Extracted 1 semantic_rules
+
+  ── LLM Response (949 chars) ──
+{
+  "semantic_rules": [
+    {
+      "id": "doq-alpn-token-selection",
+      "modality": "UNSPECIFIED",
+      "actor": {
+        "name": "endpoint",
+        "type": "endpoint"
+      },
+      "event": {
+        "kind": "state_trigger",
+        "expr": "During connection establishment in the crypto handshake"
+      },
+      "conditions": [
+        {
+          "kind": "predicate",
+          "expr": "DoQ support is to be indicated"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "send",
+          "expr": "select the Application-Layer Protocol Negotiation (ALPN) token \"doq\""
+        }
+      ],
+      "provenance": {
+        "document": "RFC9250",
+        "section": "RFC9250_Sec4.1",
+        "anchor": "ALPN token \"doq\"",
+        "source_text": "During connection establishment, DoQ support is indicated by selecting the Application-Layer Protocol Negotiation (ALPN) token \"doq\" in the crypto handshake."
+      }
+    }
+  ]
+}
+  ── End LLM Response ──
+
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 4a: 规则归一化 (Rule-based)                                  ║
+╚════════════════════════════════════════════════════════════════╝
+  Registry: 4 roles, 7 events, 6 actions, 17 predicates
+  Rule [doq-alpn-token-selection]  resolved=False
+      modality: "UNSPECIFIED" → ✗ unresolved
+      actor: "endpoint" → ✗ unresolved
+      event: "state_trigger:During connection establishment in the crypto handshake" → ✗ unresolved
+      action[0]: "send:select the Application-Layer Protocol Negotiation (ALPN) tok" → ✓ send_message
+      condition[0]: "DoQ support is to be indicated" → ✗ unresolved
+  Unresolved items: 4
+      [modality] "UNSPECIFIED" (rule: doq-alpn-token-selection)
+      [role] "endpoint" (rule: doq-alpn-token-selection)
+      [event] "state_trigger: During connection establishment in the crypto handshake" (rule: doq-alpn-token-selection)
+      [condition] "DoQ support is to be indicated" (rule: doq-alpn-token-selection)
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 4b: Maude 校验                                            ║
+╚════════════════════════════════════════════════════════════════╝
+  Total: 1  Valid: 1  Generatable: 0
+    [✓|SKIP] doq-alpn-token-selection
+        WARN:  actor_type is unresolved
+        WARN:  event_pattern is unresolved
+        WARN:  actor_type unresolved, cannot generate rule
+        WARN:  event_pattern unresolved, will generate with TODO trigger
+        WARN:  modality unresolved, will default to 'must'
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 4c: Maude 代码生成                                          ║
+╚════════════════════════════════════════════════════════════════╝
+  Result: success=True
+
+  ── Generated Maude Code ──
+--- Generated by RFC Formalization Pipeline
+--- semantic_rules count: 1
+
+mod RFC-RULES is
+  protecting DNS .
+
+  --- SKIPPED (not generatable): doq-alpn-token-selection
+  ---   resolved: False
+  ---   actor: None
+  ---   event: None
+
+
+endm
+  ── End Generated Code ──
+
+
+╔════════════════════════════════════════════════════════════════╗
+║  Phase 5: 形式化执行 [PLACEHOLDER]                                  ║
+╚════════════════════════════════════════════════════════════════╝
+  Result: success=True (placeholder — 未实际调用 Maude)
+
+╔════════════════════════════════════════════════════════════════╗
+║  Pipeline 完成  success=True                                     ║
+╚════════════════════════════════════════════════════════════════╝
+
+================================================================
+  RESULT  : SUCCESS
+  RFC     : 9250   Section: RFC9250_Sec4.1
+================================================================
+
+[TRACE]
+  [Pipeline] 启动  rfc=9250  seed=RFC9250_Sec4.1
+  [Phase1] 从缓存加载图谱  nodes=57  edges=50
+  [Phase2] ContextPack 组装完成（使用缓存）
+  [Pipeline] 自动获取 section_text (240 chars)
+  [Phase3] IR 抽取  success=True
+  [Phase4a] 归一化  unresolved=4
+  [Phase4b] 校验  valid=1/1  generatable=0
+  [Phase4c] Maude 生成  success=True
+  [Phase5] 形式化执行  success=True
+  [Pipeline] 结束  success=True
+
+[OUTPUT] IR saved to: /Users/wuyue/0-我的/0-THU/0-网络测绘组/Projects/协议形式化/reproduce/dns-sigcomm/LLM-DNS-RFC/src/output/RFC9250_Sec4.1_ir.json
+[OUTPUT] Maude code saved to: /Users/wuyue/0-我的/0-THU/0-网络测绘组/Projects/协议形式化/reproduce/dns-sigcomm/LLM-DNS-RFC/src/output/RFC9250_Sec4.1.maude
+[OUTPUT] ContextPack saved to: /Users/wuyue/0-我的/0-THU/0-网络测绘组/Projects/协议形式化/reproduce/dns-sigcomm/LLM-DNS-RFC/src/output/RFC9250_Sec4.1_context_pack.json

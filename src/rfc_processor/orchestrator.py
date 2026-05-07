@@ -1,4 +1,5 @@
 import os
+import re
 import urllib.request
 import urllib.error
 import ssl
@@ -6,8 +7,8 @@ import networkx as nx
 from collections import deque
 from typing import Optional, Set
 
-from rfc_parser import RFCGraphBuilder
-from embedding import SectionEmbeddingIndexer
+from .rfc_parser import RFCGraphBuilder
+from .embedding import SectionEmbeddingIndexer
 
 ## v2修改：图融合+向量索引构建
 class RFCGraphOrchestrator:
@@ -119,40 +120,51 @@ class RFCGraphOrchestrator:
         xml_url = f"https://www.rfc-editor.org/rfc/rfc{rfc_num}.xml"
         try:
             with urllib.request.urlopen(xml_url, context=self._ssl_context) as response:
-                content = response.read().decode('utf-8')
+                content = response.read().decode('utf-8', errors='replace')
                 with open(xml_path, 'w', encoding='utf-8') as f:
                     f.write(content)
                 builder.parse_xml_string(content)
                 subgraph = builder.get_graph()
                 return self._post_process_subgraph(subgraph)
-        except urllib.error.URLError:
+        except (urllib.error.URLError, UnicodeDecodeError):
             pass 
 
         # 4. 远程降级获取 TXT 并保存
         txt_url = f"https://www.rfc-editor.org/rfc/rfc{rfc_num}.txt"
         try:
             with urllib.request.urlopen(txt_url, context=self._ssl_context) as response:
-                content = response.read().decode('utf-8')
+                raw = response.read()
+                # 部分老旧 RFC 非 UTF-8 编码，降级为 latin-1
+                try:
+                    content = raw.decode('utf-8')
+                except UnicodeDecodeError:
+                    content = raw.decode('latin-1')
                 with open(txt_path, 'w', encoding='utf-8') as f:
                     f.write(content)
                 builder.parse_text_string(content)
                 subgraph = builder.get_graph()
                 return self._post_process_subgraph(subgraph)
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, Exception) as e:
             print(f"未能获取 {rfc_id} 的任何格式数据: {e}")
             return None
 
     def _get_normative_targets(self, subgraph: nx.DiGraph) -> Set[str]:
-        """从子图中提取所有向外的 cites_normative 目标"""
+        """从子图中提取所有向外的 cites_normative 目标（仅文档级节点，已规范化）"""
         targets = set()
         for u, v, data in subgraph.edges(data=True):
-            if data.get("edge_type") == "cites_normative" and v.startswith("RFC"):
-                targets.add(v)
+            if data.get("edge_type") == "cites_normative" and re.fullmatch(r"RFC\d+", v):
+                targets.add(self._normalize_rfc_id(v))
         return targets
 
     def _normalize_rfc_id(self, rfc_id: str) -> str:
         s = rfc_id.strip().upper()
-        return s if s.startswith("RFC") else f"RFC{s}"
+        if not s.startswith("RFC"):
+            s = f"RFC{s}"
+        # 去除前导零: RFC0768 -> RFC768
+        m = re.match(r"RFC0*(\d+)$", s)
+        if m:
+            s = f"RFC{m.group(1)}"
+        return s
 
     def _post_process_subgraph(self, subgraph: nx.DiGraph) -> nx.DiGraph:
         """

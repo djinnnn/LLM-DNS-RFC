@@ -1,0 +1,29 @@
+# RFC 2119 义务词 → 归一化 modality
+# 匹配时忽略大小写，按长度降序优先匹配
+
+must:
+  - "must"
+  - "shall"
+  - "is required to"
+  - "required"
+  - "mandatory"
+
+must_not:
+  - "must not"
+  - "shall not"
+  - "is not allowed to"
+  - "prohibited"
+
+should:
+  - "should"
+  - "recommended"
+  - "ought to"
+
+should_not:
+  - "should not"
+  - "not recommended"
+
+may:
+  - "may"
+  - "optional"
+  - "can"
